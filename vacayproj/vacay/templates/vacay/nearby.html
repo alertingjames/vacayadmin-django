@@ -1,0 +1,1832 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Nearby</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+       #welcome {
+        width: auto;
+        height: auto;
+        padding:10px;
+        box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.25);
+        border-radius:20px;
+        background-color: orange;
+        color:white;
+        font-size:25px;
+        font-family:Tahoma;
+        font-weight:700;
+        -webkit-animation-name: example; /* Safari 4.0 - 8.0 */
+        -webkit-animation-duration: 4s; /* Safari 4.0 - 8.0 */
+        animation-name: example;
+        animation-duration: 4s;
+      }
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes example {
+    0% {background-color: blue; left:0px; top:0px;}
+    10% {background-color: yellow; left:0px; top:0px;}
+    20% {background-color: red; left:0px; top:0px;}
+    25% {background-color: yellow; left:100px; top:100px;}
+    50% {background-color: blue; left:100px; top:100px;}
+    60% {background-color: red; left:-100px; top:100px;}
+    70% {background-color: blue; left:-100px; top:100px;}
+    75% {background-color: orange; left:0px; top:0px;}
+    100% {background-color: blue; left:0px; top:0px;}
+}
+
+/* Standard syntax */
+@keyframes example {
+    0% {background-color: blue; left:0px; top:0px;}
+    10% {background-color: yellow; left:0px; top:0px;}
+    20% {background-color: red; left:0px; top:0px;}
+    25% {background-color: yellow; left:100px; top:100px;}
+    50% {background-color: blue; left:100px; top:100px;}
+    60% {background-color: red; left:-100px; top:100px;}
+    70% {background-color: blue; left:-100px; top:100px;}
+    75% {background-color: orange; left:0px; top:0px;}
+    100% {background-color: blue; left:0px; top:0px;}
+}
+
+.dropdown {
+    <!--position: relative;-->
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    <!--position: absolute;-->
+    background-color: #f9f9f9;
+    min-width: 600px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 22;
+}
+
+.dropdown:hover .dropdown-content {
+    display: inline-block;
+}
+
+#desc {
+    padding: 10px;
+    text-align: center;
+    font-size:20px;
+    color:red;
+    font-weight:600;
+    background:white;
+}
+
+    </style>
+  </head>
+  <body>
+  <div style="margin-top:5px; margin-left:130px;  z-index:10; position:fixed; display:none;">
+    <input id="lat" type="textbox" value="{{latitude}}" style="width:300px;">
+    <input id="lng" type="textbox" value="{{longitude}}" style="width:300px;">
+    <input id="range" type="textbox" value="{{range}}" style="width:150px;">
+    <input id="type" type="textbox" value="{{type}}" style="width:150px;">
+    <input id="address" type="textbox" value="{{address}}" style="width:150px;">
+  </div>
+    <div style="margin-top:5px; margin-left:150px;  z-index:10; position:fixed;" id="welcome">
+    {% if type == 'accounting' %}Welcome! Here is {{address}}<br>There are accountings: R({{range}}M)
+      {% elif type == 'bar' %}Welcome! Here is {{address}}<br>There are bars: R({{range}}M)
+      {% elif type == 'cafe' %}Welcome! Here is {{address}}<br>There are cafes: R({{range}}M)
+      {% elif type == 'amusementpark' %}Welcome! Here is {{address}}<br>There are amusement parks: R({{range}}M)
+      {% elif type == 'bookstore' %}Welcome! Here is {{address}}<br>There are book stores: R({{range}}M)
+      {% elif type == 'busstation' %}Welcome! Here is {{address}}<br>There are bus stations: R({{range}}M)
+      {% elif type == 'bicyclestore' %}Welcome! Here is {{address}}<br>There are bicycle stores: R({{range}}M)
+      {% elif type == 'campground' %}Welcome! Here is {{address}}<br>There are campgrounds: R({{range}}M)
+      {% elif type == 'carrepair' %}Welcome! Here is {{address}}<br>There are car repairs: R({{range}}M)
+      {% elif type == 'carrental' %}Welcome! Here is {{address}}<br>There are car rentals: R({{range}}M)
+      {% elif type == 'carwash' %}Welcome! Here is {{address}}<br>There are car washes: R({{range}}M)
+      {% elif type == 'cardealer' %}Welcome! Here is {{address}}<br>There are car dealers: R({{range}}M)
+      {% elif type == 'casino' %}Welcome! Here is {{address}}<br>There are casinos: R({{range}}M)
+      {% elif type == 'church' %}Welcome! Here is {{address}}<br>There are churches: R({{range}}M)
+      {% elif type == 'cityhall' %}Welcome! Here is {{address}}<br>There are city halls: R({{range}}M)
+      {% elif type == 'clothingstore' %}Welcome! Here is {{address}}<br>There are clothing stores: R({{range}}M)
+      {% elif type == 'conveniencestore' %}Welcome! Here is {{address}}<br>There are convenience stores: R({{range}}M)
+      {% elif type == 'courthouse' %}Welcome! Here is {{address}}<br>There are courthouses: R({{range}}M)
+      {% elif type == 'departmentstore' %}Welcome! Here is {{address}}<br>There are department stores: R({{range}}M)
+      {% elif type == 'dentist' %}Welcome! Here is {{address}}<br>There are dentists: R({{range}}M)
+      {% elif type == 'doctor' %}Welcome! Here is {{address}}<br>There are doctors: R({{range}}M)
+      {% elif type == 'electrician' %}Welcome! Here is {{address}}<br>There are electricians: R({{range}}M)
+      {% elif type == 'electronicsstore' %}Welcome! Here is {{address}}<br>There are electronics stores: R({{range}}M)
+      {% elif type == 'embassy' %}Welcome! Here is {{address}}<br>There are embassies: R({{range}}M)
+      {% elif type == 'firestation' %}Welcome! Here is {{address}}<br>There are fire stations: R({{range}}M)
+      {% elif type == 'florist' %}Welcome! Here is {{address}}<br>There are florists: R({{range}}M)
+      {% elif type == 'furniturestore' %}Welcome! Here is {{address}}<br>There are furniture stores: R({{range}}M)
+      {% elif type == 'gasstation' %}Welcome! Here is {{address}}<br>There are gas stations: R({{range}}M)
+      {% elif type == 'gym' %}Welcome! Here is {{address}}<br>There are gyms: R({{range}}M)
+      {% elif type == 'haircare' %}Welcome! Here is {{address}}<br>There are hair cares: R({{range}}M)
+      {% elif type == 'hardwarestore' %}Welcome! Here is {{address}}<br>There are hardware stores: R({{range}}M)
+      {% elif type == 'hindutemple' %}Welcome! Here is {{address}}<br>There are hindu temples: R({{range}}M)
+      {% elif type == 'homegoodsstore' %}Welcome! Here is {{address}}<br>There are home goods stores: R({{range}}M)
+      {% elif type == 'aquarium' %}Welcome! Here is {{address}}<br>There are aquariums: R({{range}}M)
+      {% elif type == 'artgallery' %}Welcome! Here is {{address}}<br>There are art galleries: R({{range}}M)
+      {% elif type == 'atm' %}Welcome! Here is {{address}}<br>There are atms: R({{range}}M)
+      {% elif type == 'bakery' %}Welcome! Here is {{address}}<br>There are bakeries: R({{range}}M)
+      {% elif type == 'bowlingalley' %}Welcome! Here is {{address}}<br>There are bowling alleys: R({{range}}M)
+      {% elif type == 'insuranceagency' %}Welcome! Here is {{address}}<br>There are insurance agencies: R({{range}}M)
+      {% elif type == 'jewelrystore' %}Welcome! Here is {{address}}<br>There are jewelry stores: R({{range}}M)
+      {% elif type == 'laundry' %}Welcome! Here is {{address}}<br>There are laundries: R({{range}}M)
+      {% elif type == 'lawyer' %}Welcome! Here is {{address}}<br>There are lawyers: R({{range}}M)
+      {% elif type == 'library' %}Welcome! Here is {{address}}<br>There are libraries: R({{range}}M)
+      {% elif type == 'liquorstore' %}Welcome! Here is {{address}}<br>There are liquor stores: R({{range}}M)
+      {% elif type == 'localgovernmentoffice' %}Welcome! Here is {{address}}<br>There are local government offices: R({{range}}M)
+      {% elif type == 'locksmith' %}Welcome! Here is {{address}}<br>There are locksmithes: R({{range}}M)
+      {% elif type == 'lodging' %}Welcome! Here is {{address}}<br>There are lodgings: R({{range}}M)
+      {% elif type == 'mealdelivery' %}Welcome! Here is {{address}}<br>There are meal deliveries: R({{range}}M)
+      {% elif type == 'mealtakeaway' %}Welcome! Here is {{address}}<br>There are meal takeaways: R({{range}}M)
+      {% elif type == 'mosque' %}Welcome! Here is {{address}}<br>There are mosques: R({{range}}M)
+      {% elif type == 'movierental' %}Welcome! Here is {{address}}<br>There are movie rentals: R({{range}}M)
+      {% elif type == 'movietheater' %}Welcome! Here is {{address}}<br>There are movie theaters: R({{range}}M)
+      {% elif type == 'movingcompany' %}Welcome! Here is {{address}}<br>There are moving companies: R({{range}}M)
+      {% elif type == 'museum' %}Welcome! Here is {{address}}<br>There are museums: R({{range}}M)
+      {% elif type == 'nightclub' %}Welcome! Here is {{address}}<br>There are night clubs: R({{range}}M)
+      {% elif type == 'painter' %}Welcome! Here is {{address}}<br>There are painters: R({{range}}M)
+      {% elif type == 'park' %}Welcome! Here is {{address}}<br>There are parks: R({{range}}M)
+      {% elif type == 'parking' %}Welcome! Here is {{address}}<br>There are parkings: R({{range}}M)
+      {% elif type == 'petstore' %}Welcome! Here is {{address}}<br>There are pet stores: R({{range}}M)
+      {% elif type == 'pharmacy' %}Welcome! Here is {{address}}<br>There are pharmacies: R({{range}}M)
+      {% elif type == 'physiotherapist' %}Welcome! Here is {{address}}<br>There are physiotherapists: R({{range}}M)
+      {% elif type == 'placeofworship' %}Welcome! Here is {{address}}<br>There are places of worship: R({{range}}M)
+      {% elif type == 'plumber' %}Welcome! Here is {{address}}<br>There are plumbers: R({{range}}M)
+      {% elif type == 'police' %}Welcome! Here is {{address}}<br>There are polices: R({{range}}M)
+      {% elif type == 'postoffice' %}Welcome! Here is {{address}}<br>There are post offices: R({{range}}M)
+      {% elif type == 'realestateagency' %}Welcome! Here is {{address}}<br>There are real estate agencies: R({{range}}M)
+      {% elif type == 'roofingcontractor' %}Welcome! Here is {{address}}<br>There are roofing contractors: R({{range}}M)
+      {% elif type == 'rvpark' %}Welcome! Here is {{address}}<br>There are RV parks: R({{range}}M)
+      {% elif type == 'shoestore' %}Welcome! Here is {{address}}<br>There are shoe stores: R({{range}}M)
+      {% elif type == 'shoppingmall' %}Welcome! Here is {{address}}<br>There are shopping malls: R({{range}}M)
+      {% elif type == 'spa' %}Welcome! Here is {{address}}<br>There are spas: R({{range}}M)
+      {% elif type == 'stadium' %}Welcome! Here is {{address}}<br>There are stadiums: R({{range}}M)
+      {% elif type == 'storage' %}Welcome! Here is {{address}}<br>There are storages: R({{range}}M)
+      {% elif type == 'store' %}Welcome! Here is {{address}}<br>There are stores: R({{range}}M)
+      {% elif type == 'subwaystation' %}Welcome! Here is {{address}}<br>There are subway stations: R({{range}}M)
+      {% elif type == 'synagogue' %}Welcome! Here is {{address}}<br>There are synagogues: R({{range}}M)
+      {% elif type == 'taxistand' %}Welcome! Here is {{address}}<br>There are taxi stands: R({{range}}M)
+      {% elif type == 'trainstation' %}Welcome! Here is {{address}}<br>There are train stations: R({{range}}M)
+      {% elif type == 'transitstation' %}Welcome! Here is {{address}}<br>There are transit stations: R({{range}}M)
+      {% elif type == 'travelagency' %}Welcome! Here is {{address}}<br>There are travel agencies: R({{range}}M)
+      {% elif type == 'university' %}Welcome! Here is {{address}}<br>There are universities: R({{range}}M)
+      {% elif type == 'veterinarycare' %}Welcome! Here is {{address}}<br>There are veterinary cares: R({{range}}M)
+      {% elif type == 'zoo' %}Welcome! Here is {{address}}<br>There are zoos: R({{range}}M)
+      {% else %}{% endif %}
+  </div>
+    <div id="map" style="width: 60%; height: cover; float:left"></div>
+  <!--<img src="" style="border: 2px solid white; position:fixed; width:250px; height:auto; margin-top:75px; border-radius:15px; z-index:20; margin-left:10px;">-->
+  <div class="dropdown">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSS_cNAueJu8ZDEAqiynun55jDj9Sb5ska4deXuZnr1LgkuHdPMqg" id="placeimage" style="border: 2px solid white; position:fixed; width:250px; height:auto; margin-top:75px; border-radius:15px; z-index:20; margin-left:10px;">
+    <div class="dropdown-content" style="border: 2px solid white; position:fixed; width:600px; height:auto; border-radius:15px; z-index:22; margin-left:20px; margin-top:20px; padding:10px;">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSS_cNAueJu8ZDEAqiynun55jDj9Sb5ska4deXuZnr1LgkuHdPMqg" id="placeimage2" alt="" style="width:600px; height:auto;">
+      <div id="desc"></div>
+    </div>
+  </div>
+    <div id="pano" style="width: 40%; height: 100%; float:left"></div>
+  <script>
+      // This example requires the Places library. Include the libraries=places
+      // parameter when you first load the API. For example:
+      // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+
+      var map;
+      var infowindow;
+      var latt = document.getElementById('lat').value;
+      var lngg = document.getElementById('lng').value;
+      var range = document.getElementById('range').value;
+      var address = document.getElementById('address').value;
+
+      var panorama;
+      var sv;
+      var type = document.getElementById('type').value;;
+
+      function initMap() {
+
+        <!--var pyrmont = {lat: 38.7856777, lng: -104.845099};-->
+
+        sv = new google.maps.StreetViewService();
+
+        panorama = new google.maps.StreetViewPanorama(document.getElementById('pano'));
+
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: new google.maps.LatLng(latt,lngg),
+          zoom: 15,
+          streetViewControl: true
+        });
+
+        if (type === 'accounting'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'accounting' ]
+            };
+        }
+        else if (type === 'bar'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'bar' ]
+            };
+        }
+        else if (type === 'cafe'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'cafe' ]
+            };
+        }
+        else if (type === 'amusementpark'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'amusement_park' ]
+            };
+        }
+        else if (type === 'bookstore'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'book_store' ]
+            };
+        }
+        else if (type === 'busstation'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'bus_station' ]
+            };
+        }
+        else if (type === 'bicyclestore'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'bicycle_store' ]
+            };
+        }
+        else if (type === 'campground'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'campground' ]
+            };
+        }
+        else if (type === 'carrepair'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'car_repair' ]
+            };
+        }
+        else if (type === 'carrental'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'car_rental' ]
+            };
+        }
+        else if (type === 'carwash'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'car_wash' ]
+            };
+        }
+        else if (type === 'cardealer'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'car_dealer' ]
+            };
+        }
+        else if (type === 'casino'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'casino' ]
+            };
+        }
+        else if (type === 'church'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'church' ]
+            };
+        }
+        else if (type === 'cityhall'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'city_hall' ]
+            };
+        }
+        else if (type === 'clothingstore'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'clothing_store' ]
+            };
+        }
+        else if (type === 'conveniencestore'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'convenience_store' ]
+            };
+        }
+        else if (type === 'courthouse'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'courthouse' ]
+            };
+        }
+        else if (type === 'departmentstore'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'department_store' ]
+            };
+        }
+        else if (type === 'dentist'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'dentist' ]
+            };
+        }
+        else if (type === 'doctor'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'doctor' ]
+            };
+        }
+        else if (type === 'electrician'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'electrician' ]
+            };
+        }
+        else if (type === 'electronicsstore'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'electronics_store' ]
+            };
+        }
+        else if (type === 'embassy'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'embassy' ]
+            };
+        }
+         else if (type === 'firestation'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'fire_station' ]
+            };
+        }
+        else if (type === 'florist'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'florist' ]
+            };
+        }
+        else if (type === 'furniturestore'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'furniture_store' ]
+            };
+        }
+         else if (type === 'gasstation'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'gas_station' ]
+            };
+        }
+        else if (type === 'gym'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'gym' ]
+            };
+        }
+        else if (type === 'haircare'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'hair_care' ]
+            };
+        }
+        else if (type === 'hardwarestore'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'hardware_store' ]
+            };
+        }
+        else if (type === 'hindutemple'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'hindu_temple' ]
+            };
+        }
+        else if (type === 'homegoodsstore'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'home_goods_store' ]
+            };
+        }
+        else if (type === 'aquarium'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'aquarium' ]
+            };
+        }
+        else if (type === 'artgallery'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'art_gallery' ]
+            };
+        }
+        else if (type === 'atm'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'atm' ]
+            };
+        }
+        else if (type === 'bakery'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'bakery' ]
+            };
+        }
+        else if (type === 'bowlingalley'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'bowling_alley' ]
+            };
+        }
+        else if (type === 'insuranceagency'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'insurance_agency' ]
+            };
+        }
+        else if (type === 'jewelrystore'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'jewelry_store' ]
+            };
+        }
+        else if (type === 'laundry'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'laundry' ]
+            };
+        }
+        else if (type === 'lawyer'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'lawyer' ]
+            };
+        }
+        else if (type === 'library'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'library' ]
+            };
+        }
+        else if (type === 'liquorstore'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'liquor_store' ]
+            };
+        }
+        else if (type === 'localgovernmentoffice'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'local_government_office' ]
+            };
+        }
+        else if (type === 'locksmith'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'locksmith' ]
+            };
+        }
+        else if (type === 'lodging'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'lodging' ]
+            };
+        }
+        else if (type === 'mealdelivery'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'meal_delivery' ]
+            };
+        }
+        else if (type === 'mealtakeaway'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'meal_takeaway' ]
+            };
+        }
+        else if (type === 'mosque'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'mosque' ]
+            };
+        }
+        else if (type === 'movierental'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'movie_rental' ]
+            };
+        }
+        else if (type === 'movietheater'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'movie_theater' ]
+            };
+        }
+        else if (type === 'movingcompany'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'moving_company' ]
+            };
+        }
+        else if (type === 'museum'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'museum' ]
+            };
+        }
+        else if (type === 'nightclub'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'night_club' ]
+            };
+        }
+        else if (type === 'painter'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'painter' ]
+            };
+        }
+        else if (type === 'park'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'park' ]
+            };
+        }
+        else if (type === 'parking'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'parking' ]
+            };
+        }
+        else if (type === 'petstore'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'pet_store' ]
+            };
+        }
+        else if (type === 'pharmacy'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'pharmacy' ]
+            };
+        }
+        else if (type === 'physiotherapist'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'physiotherapist' ]
+            };
+        }
+        else if (type === 'placeofworship'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'place_of_worship' ]
+            };
+        }
+        else if (type === 'plumber'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'plumber' ]
+            };
+        }
+        else if (type === 'police'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'police' ]
+            };
+        }
+        else if (type === 'postoffice'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'post_office' ]
+            };
+        }
+        else if (type === 'realestateagency'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'real_estate_agency' ]
+            };
+        }
+        else if (type === 'roofingcontractor'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'roofing_contractor' ]
+            };
+        }
+        else if (type === 'rvpark'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'rv_park' ]
+            };
+        }
+        else if (type === 'shoestore'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'shoe_store' ]
+            };
+        }
+        else if (type === 'shoppingmall'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'shopping_mall' ]
+            };
+        }
+        else if (type === 'spa'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'spa' ]
+            };
+        }
+        else if (type === 'stadium'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'stadium' ]
+            };
+        }
+        else if (type === 'storage'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'storage' ]
+            };
+        }
+        else if (type === 'store'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'store' ]
+            };
+        }
+        else if (type === 'subwaystation'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'subway_station' ]
+            };
+        }
+        else if (type === 'synagogue'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'synagogue' ]
+            };
+        }
+        else if (type === 'taxistand'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'taxi_stand' ]
+            };
+        }
+        else if (type === 'trainstation'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'train_station' ]
+            };
+        }
+        else if (type === 'transitstation'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'transit_station' ]
+            };
+        }
+        else if (type === 'travelagency'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'travel_agency' ]
+            };
+        }
+        else if (type === 'university'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'university' ]
+            };
+        }
+        else if (type === 'veterinarycare'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'veterinary_care' ]
+            };
+        }
+        else if (type === 'zoo'){
+
+            var request = {
+                location: new google.maps.LatLng(latt,lngg),
+                radius: range,
+                type : [ 'zoo' ]
+            };
+        }
+
+        infowindow = new google.maps.InfoWindow();
+        var service = new google.maps.places.PlacesService(map);
+        service.nearbySearch(request, callback);
+
+        var marker2 = new google.maps.Marker({
+          map: map,
+          animation: google.maps.Animation.DROP,
+          position: new google.maps.LatLng(latt,lngg)
+        });
+
+        var infowindow2 = new google.maps.InfoWindow();
+        infowindow2.setContent("Center: "+address);
+        infowindow2.open(map, marker2);
+
+        google.maps.event.addListener(marker2, 'click', function() {
+
+          infowindow2.setContent("Center: "+address);
+          infowindow2.open(map, marker2);
+
+          sv.getPanorama({location: marker2.getPosition(), radius: 50}, processSVData);
+        });
+
+        var cityCircle = new google.maps.Circle({
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.3,
+            strokeWeight: 2,
+            fillColor: '#FF0000',
+            fillOpacity: 0.15,
+            map: map,
+            center: new google.maps.LatLng(latt,lngg),
+            radius: range*1
+        });
+
+        sv.getPanorama({location: new google.maps.LatLng(latt,lngg), radius: 50}, processSVData);
+      }
+
+      function callback(results, status) {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+          for (var i = 0; i < results.length; i++) {
+            createMarker(results[i]);
+          }
+        }else{document.getElementById('welcome').style.display = 'none'; alert("There is no any service...");}
+      }
+
+      function createMarker(place) {
+        var placeLoc = place.geometry.location;
+
+        if (type === 'accounting'){
+
+            var icon = {
+              url: "/static/vacay/images/accounting.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'bar'){
+
+            var icon = {
+              url: "/static/vacay/images/bar.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'cafe'){
+
+            var icon = {
+              url: "/static/vacay/images/cafe.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'amusementpark'){
+
+            var icon = {
+              url: "/static/vacay/images/amusementpark.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'bookstore'){
+
+            var icon = {
+              url: "/static/vacay/images/bookstore.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'busstation'){
+
+            var icon = {
+              url: "/static/vacay/images/busstation.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'bicyclestore'){
+
+            var icon = {
+              url: "/static/vacay/images/bicyclestore.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'campground'){
+
+            var icon = {
+              url: "/static/vacay/images/campground.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'carrepair'){
+
+            var icon = {
+              url: "/static/vacay/images/carrepair.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'carrental'){
+
+            var icon = {
+              url: "/static/vacay/images/carrental.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'carwash'){
+
+            var icon = {
+              url: "/static/vacay/images/carwash.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'cardealer'){
+
+            var icon = {
+              url: "/static/vacay/images/cardealer.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'casino'){
+
+            var icon = {
+              url: "/static/vacay/images/casino.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'church'){
+
+            var icon = {
+              url: "/static/vacay/images/church.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+         else if (type === 'cityhall'){
+
+            var icon = {
+              url: "/static/vacay/images/cityhall.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'clothingstore'){
+
+            var icon = {
+              url: "/static/vacay/images/clothingstore.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'conveniencestore'){
+
+            var icon = {
+              url: "/static/vacay/images/conveniencestore.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'courthouse'){
+
+            var icon = {
+              url: "/static/vacay/images/courthouse.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'departmentstore'){
+
+            var icon = {
+              url: "/static/vacay/images/departmentstore.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'dentist'){
+
+            var icon = {
+              url: "/static/vacay/images/dentist.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'doctor'){
+
+            var icon = {
+              url: "/static/vacay/images/doctor.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'electrician'){
+
+            var icon = {
+              url: "/static/vacay/images/electrician.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'electronicsstore'){
+
+            var icon = {
+              url: "/static/vacay/images/electronicsstore.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'embassy'){
+
+            var icon = {
+              url: "/static/vacay/images/embassy.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'firestation'){
+
+            var icon = {
+              url: "/static/vacay/images/firestation.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'florist'){
+
+            var icon = {
+              url: "/static/vacay/images/florist.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'furniturestore'){
+
+            var icon = {
+              url: "/static/vacay/images/furniturestore.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'gasstation'){
+
+            var icon = {
+              url: "/static/vacay/images/gasstation.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'gym'){
+
+            var icon = {
+              url: "/static/vacay/images/gym.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'haircare'){
+
+            var icon = {
+              url: "/static/vacay/images/haircare.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'hardwarestore'){
+
+            var icon = {
+              url: "/static/vacay/images/hardwarestore.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'hindutemple'){
+
+            var icon = {
+              url: "/static/vacay/images/hindutemple.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'homegoodsstore'){
+
+            var icon = {
+              url: "/static/vacay/images/homegoodsstore.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'aquarium'){
+
+            var icon = {
+              url: "/static/vacay/images/aquarium.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'artgallery'){
+
+            var icon = {
+              url: "/static/vacay/images/artgallery.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'atm'){
+
+            var icon = {
+              url: "/static/vacay/images/atm.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'bakery'){
+
+            var icon = {
+              url: "/static/vacay/images/bakery.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'bowlingalley'){
+
+            var icon = {
+              url: "/static/vacay/images/bowlingalley.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+         else if (type === 'insuranceagency'){
+
+            var icon = {
+              url: "/static/vacay/images/insuranceagency.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'jewelrystore'){
+
+            var icon = {
+              url: "/static/vacay/images/jewelrystore.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'laundry'){
+
+            var icon = {
+              url: "/static/vacay/images/laundry.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'lawyer'){
+
+            var icon = {
+              url: "/static/vacay/images/lawyer.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'library'){
+
+            var icon = {
+              url: "/static/vacay/images/library.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'liquorstore'){
+
+            var icon = {
+              url: "/static/vacay/images/liquorstore.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'localgovernmentoffice'){
+
+            var icon = {
+              url: "/static/vacay/images/localgovernmentoffice.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'locksmith'){
+
+            var icon = {
+              url: "/static/vacay/images/locksmith.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'lodging'){
+
+            var icon = {
+              url: "/static/vacay/images/lodging.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'mealdelivery'){
+
+            var icon = {
+              url: "/static/vacay/images/mealdelivery.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'mealtakeaway'){
+
+            var icon = {
+              url: "/static/vacay/images/mealtakeaway.ico",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'mosque'){
+
+            var icon = {
+              url: "/static/vacay/images/mosque.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'movierental'){
+
+            var icon = {
+              url: "/static/vacay/images/movierental.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'movietheater'){
+
+            var icon = {
+              url: "/static/vacay/images/movietheater.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'movingcompany'){
+
+            var icon = {
+              url: "/static/vacay/images/movingcompany.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'museum'){
+
+            var icon = {
+              url: "/static/vacay/images/museum.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'nightclub'){
+
+            var icon = {
+              url: "/static/vacay/images/nightclub.jpg",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'painter'){
+
+            var icon = {
+              url: "/static/vacay/images/painter.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'park'){
+
+            var icon = {
+              url: "/static/vacay/images/park.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'parking'){
+
+            var icon = {
+              url: "/static/vacay/images/parking.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'petstore'){
+
+            var icon = {
+              url: "/static/vacay/images/petstore.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'pharmacy'){
+
+            var icon = {
+              url: "/static/vacay/images/pharmacy.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'physiotherapist'){
+
+            var icon = {
+              url: "/static/vacay/images/physiotherapist.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'plumber'){
+
+            var icon = {
+              url: "/static/vacay/images/plumber.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'police'){
+
+            var icon = {
+              url: "/static/vacay/images/police.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'postoffice'){
+
+            var icon = {
+              url: "/static/vacay/images/postoffice.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'realestateagency'){
+
+            var icon = {
+              url: "/static/vacay/images/realestateagency.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'roofingcontractor'){
+
+            var icon = {
+              url: "/static/vacay/images/roofingcontractor.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'rvpark'){
+
+            var icon = {
+              url: "/static/vacay/images/rvpark.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'shoestore'){
+
+            var icon = {
+              url: "/static/vacay/images/shoestore.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'shoppingmall'){
+
+            var icon = {
+              url: "/static/vacay/images/shoppingmall.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'spa'){
+
+            var icon = {
+              url: "/static/vacay/images/spa.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'stadium'){
+
+            var icon = {
+              url: "/static/vacay/images/stadium.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'storage'){
+
+            var icon = {
+              url: "/static/vacay/images/storage.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'store'){
+
+            var icon = {
+              url: "/static/vacay/images/store.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'subwaystation'){
+
+            var icon = {
+              url: "/static/vacay/images/subwaystation.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'synagogue'){
+
+            var icon = {
+              url: "/static/vacay/images/synagogue.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'taxistand'){
+
+            var icon = {
+              url: "/static/vacay/images/taxistand.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'trainstation'){
+
+            var icon = {
+              url: "/static/vacay/images/trainstation.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'transitstation'){
+
+            var icon = {
+              url: "/static/vacay/images/transitstation.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'travelagency'){
+
+            var icon = {
+              url: "/static/vacay/images/travelagency.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'university'){
+
+            var icon = {
+              url: "/static/vacay/images/university.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'veterinarycare'){
+
+            var icon = {
+              url: "/static/vacay/images/veterinarycare.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+        else if (type === 'zoo'){
+
+            var icon = {
+              url: "/static/vacay/images/zoo.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        }
+
+        var marker = new google.maps.Marker({
+          icon:icon,
+          map: map,
+
+          animation: google.maps.Animation.DROP,
+          position: place.geometry.location
+        });
+
+        google.maps.event.addListener(marker, 'click', function() {
+
+          if (marker.getAnimation() !== null) {
+              marker.setAnimation(null);
+          } else {
+              marker.setAnimation(google.maps.Animation.BOUNCE);
+          }
+          infowindow.setContent(place.name);
+          infowindow.open(map, this);
+
+          var photos = place.photos;
+
+          document.getElementById('placeimage').src = photos[0].getUrl({'maxWidth': 250, 'maxHeight': 250});
+          document.getElementById('placeimage2').src = photos[0].getUrl({'maxWidth': 600, 'maxHeight': 600});
+          document.getElementById('desc').innerHTML = place.name;
+
+          sv.getPanorama({location: marker.getPosition(), radius: 50}, processSVData);
+        });
+      }
+
+      function processSVData(data, status) {
+        if (status === 'OK') {
+          var marker = new google.maps.Marker({
+            position: data.location.latLng,
+            map: map,
+            visible: false,
+            title: data.location.description
+          });
+
+          <!--infowindow = new google.maps.InfoWindow();-->
+          <!--infowindow.setContent(data.location.description);-->
+          <!--infowindow.open(map, marker);-->
+
+          panorama.setPano(data.location.pano);
+          panorama.setPov({
+            heading: 270,
+            pitch: 0
+          });
+          panorama.setVisible(true);
+
+          marker.addListener('click', function() {
+            var markerPanoID = data.location.pano;
+            // Set the Pano to use the passed panoID.
+            panorama.setPano(markerPanoID);
+            panorama.setPov({
+              heading: 270,
+              pitch: 0
+            });
+            panorama.setVisible(true);
+          });
+        } else {
+          console.error('Street View data not found for this location.');
+        }
+      }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDj9cVi6h9LTEYnSe4Dv_EvG-hxqLvM8Dg&libraries=places&callback=initMap" async defer></script>
+
+   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>
+    $( function() {
+        $( "#welcome" ).draggable();
+    } );
+  </script>
+  </body>
+</html>

@@ -1,0 +1,606 @@
+{% extends 'vacay/base_admin.html' %}
+{% block title %}Edit My Profile{% endblock %}
+{% block body %}
+{% if admin %}
+<br>
+<br>
+<br>
+<style>
+
+html, body{
+  background: url("/static/vacay/images/beautybackg3.jpg") no-repeat center center fixed;
+  background-size:cover;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.desc {
+    padding: 15px;
+    text-align: center;
+}
+
+.header {
+  background-color: #327a81;
+  color: white;
+  font-size: 2.5em;
+  font-weight:900;
+  padding: 1rem;
+  text-align: center;
+  text-transform: uppercase;
+  border: 1px solid white;
+}
+
+img {
+  border-radius: 50%;
+  height: 80px;
+  width: 80px;
+}
+
+.manage {
+  border-radius: 10%;
+}
+
+.table-users {
+  border: 1px solid #327a81;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.1);
+  width: 100%;
+  background-color: white;
+  overflow-x:auto;
+}
+
+.table>tbody>tr>td{
+    vertical-align: middle;
+    horizontal-align: middle;
+}
+
+table td, table th {
+  color: #2b686e;
+  padding: 10px;
+  border: 1px solid white;
+  text-align: center;
+  vertical-align: middle;
+}
+table td {
+  text-align: center;
+  vertical-align: middle;
+}
+table td:last-child {
+  font-size: 0.95em;
+  line-height: 1.4;
+  text-align: center;
+}
+table th {
+  background-color: #daeff1;
+  font-weight: 300;
+  text-align: center;
+  vertical-align: middle;
+}
+table tr:nth-child(2n) {
+  background-color: white;
+  border: 1px solid #327a81;
+}
+table tr:nth-child(2n+1) {
+  background-color: #edf7f8;
+  border: 1px solid white;
+}
+#manage-menu{
+    -webkit-padding-start: 0px;
+    -webkit-margin-before: 0px;
+    -webkit-margin-after: 0px;
+    margin-top: 0px;
+    margin-right: auto;
+    margin-bottom: 0px;
+    margin-left: auto;
+    width:40px;
+    background-color:#7be5f8;
+    position: relative; /* <-- Added */
+    z-index: 1; /* <-- Added */
+}
+
+.info p {
+  text-align:center;
+  color: #999;
+  text-transform:none;
+  font-weight:600;
+  font-size:15px;
+  margin-top:2px
+}
+
+.info i {
+  color:#F6AA93;
+}
+form h1 {
+  font-size: 21px;
+  background: #327a81 none repeat scroll 0% 0%;
+  color: rgb(255, 255, 255);
+  padding: 19px 22px;
+  border-radius: 5px 5px 0px 0px;
+  margin: auto;
+  text-shadow: none;
+  text-align:left
+}
+
+#edit {
+  border-radius: 5px;
+  max-width:1000px;
+  width:100%;
+  margin: 2% auto;
+  background:linear-gradient(0deg,rgba(100,50,250,0.3),rgba(50,100,250,0.3));
+  opacity:0.8;
+  overflow: hidden;
+  box-shadow: 25px 25px 0 rgba(0, 0, 0, 0.2);
+}
+
+#edit:hover {
+  background-image: url("/static/vacay/images/beautybackg.jpg");
+  background-size:cover;
+  opacity:0.9;
+}
+p span {
+  color: #F00;
+}
+
+p {
+  margin: 0px;
+  font-weight: 600;
+  line-height: 2;
+  color:#fff;
+}
+
+h1 {
+  text-align:center;
+  color: #666;
+  text-shadow: 1px 1px 0px #FFF;
+  margin:50px 0px 0px 0px
+}
+
+#earth{
+  color: #fff;
+  margin:2px 2px 50px 40px
+}
+
+#earth2{
+  color: #fff;
+  margin:2px 2px 50px 40px
+}
+
+input {
+  border-radius: 0px 5px 5px 0px;
+  border: 1px solid #eee;
+  margin-bottom: 15px;
+  width: 85%;
+  height: 42px;
+  float: left;
+  padding: 0px 15px;
+  opacity: 0.8;
+  color:blue;
+  text-align:left;
+}
+
+a {
+  text-decoration:inherit
+}
+
+textarea {
+  border-radius: 0px 5px 5px 0px;
+  border: 1px solid #EEE;
+  margin: 0;
+  width: 95%;
+  height: 130px;
+  float: left;
+  padding: 15px 15px;
+  opacity: 0.8;
+  color:blue;
+}
+
+.form-group {
+  overflow: hidden;
+  clear: both;
+}
+
+.icon-case {
+  width: 10%;
+  float: left;
+  border-radius: 5px 0px 0px 5px;
+  background:green;
+  height:42px;
+  position: relative;
+  text-align: center;
+  line-height:40px;
+  padding-top:11px;
+}
+
+i {
+  color:yellow;
+}
+
+.contentform {
+  padding: 40px 30px;
+}
+
+.bouton-update{
+  background-color: #845801;
+  color: #FFF;
+  text-align: center;
+  width: 100%;
+  border:0;
+  padding: 17px 25px;
+  border-radius: 0px 0px 5px 5px;
+  cursor: pointer;
+  margin-top: 40px;
+  font-size: 18px;
+}
+
+.leftcontact {
+  width:49.5%;
+  float:left;
+  border-right: 1px dotted #CCC;
+  box-sizing: border-box;
+  padding: 0px 15px 0px 0px;
+}
+
+.rightcontact {
+  width:49.5%;
+  float:right;
+  box-sizing: border-box;
+  padding: 0px 0px 0px 15px;
+}
+
+.validation {
+  display:none;
+  margin: 0 0 10px;
+  font-weight:400;
+  font-size:13px;
+  color: #DE5959;
+}
+
+#sendmessage {
+  border:1px solid #fff;
+  display:none;
+  text-align:center;
+  margin:10px 0;
+  font-weight:600;
+  margin-bottom:30px;
+  background-color: #EBF6E0;
+  color: #5F9025;
+  border: 1px solid #B3DC82;
+  padding: 13px 40px 13px 18px;
+  border-radius: 3px;
+  box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.03);
+}
+
+#sendmessage.show,.show  {
+  display:block;
+}
+.gif-case{
+    margin-left:40px;margin-top:30px; max-width:356px; width:auto; height:auto; background: white url("/static/vacay/images/bc13.jpg");
+    background-size:100%,100%; border-radius: 2%; padding:53px;
+    background-size:cover;
+}
+
+.gif-case:hover {
+  background-image: url("/static/vacay/images/bc4.jpg");
+  background-size:100%,100%;
+  background-size:cover;
+}
+
+label.cameraButton {
+  display: inline-block;
+  /* Styles to make it look like a button */
+  padding: 0.5em;
+  border: 2px solid #666;
+  border-color: #EEE #CCC #CCC #EEE;
+  border-radius:8px;
+  font-size:16px;
+  color:white;
+  width:250px;
+  height:45px;
+  text-align:middle;
+  background-color: green;
+}
+
+</style>
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../lib/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <form id="edit" action="{%url 'update_admin' admin.adminID %}" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+	    <h1 style="margin-bottom:3px;">My Profile</h1>
+
+    <div class="contentform">
+    	<div id="sendmessage"> This profile has been updated successfully!</div>
+        <div class="leftcontact">
+
+            <div style="margin-top:2px; margin-left:5px;  width:auto; margin-bottom:15px;">
+
+                <p>Profile Picture <span>*</span></p>
+                <div class="" style="margin-bottom:25px;">
+                    <center><img src="{{admin.adminImageUrl}}" style="width:auto; height:auto; max-width:80%; max-height:200px; margin-bottom:20px; margin-top:10px; border-radius: 10%;" id="picture"><br>
+                        <div id="views" style="margin:15px;"></div>
+                        <input type="hidden" id="x" name="x" />
+                        <input type="hidden" id="y" name="y" />
+                        <input type="hidden" id="w" name="w" />
+                        <input type="hidden" id="h" name="h" />
+                        <center><button id="cropbutton" type="button" style="background:transparent; color:white; font-size:16px; border:0px; margin-bottom:8px; display:none;">Crop</button></center>
+
+                        <label class="cameraButton" style="text-align:center;">Select Picture File
+                             <input type="file" name="photo" id="file" accept="image/*" style="display:none;"/>
+                        </label>
+                    </center>
+                </div>
+            </div>
+
+			<div class="form-group">
+			   <p>Name <span>*</span></p>
+			   <span class="icon-case"><i class="fa fa-male"></i></span>
+				<input type="text" name="name" id="name" data-rule="required" data-msg="" required id="name" value="{{admin.adminName}}"/>
+                <div class="validation"></div>
+            </div>
+
+			<div class="form-group">
+			<p>E-mail <span>*</span></p>
+			<span class="icon-case"><i class="fa fa-envelope-o"></i></span>
+                <input type="email" name="email" id="email" data-rule="email" data-msg="" required id="email" value="{{admin.adminEmail}}" readonly/>
+                <div class="validation"></div>
+			</div>
+
+            <div class="form-group">
+			<p>Password <span>*</span></p>
+			<span class="icon-case"><i class="fa fa-lock"></i></span>
+                <input type="text" name="password" id="password" data-rule="required" data-msg="" required id="password" value="{{admin.adminPassword}}"/>
+                <div class="validation"></div>
+			</div>
+
+	</div>
+
+       {% if admin.adminBroadmoor != "0" %}
+	<div class="rightcontact">
+            <a href="{% url 'vacay:show_my_loc' %}" id="earth2"><img src="/static/vacay/images/earth.gif" style="width:80px; height:auto; margin-top:20px;" ></a><h5 style="color:white;margin-left:120px;">...to Map</h5>
+
+            <p>Logo Picture <span>*</span></p>
+                <div class="" style="margin-bottom:25px;">
+                    <center><img src="{{admin.adminLogoImageUrl}}" style="width:auto; height:auto; max-width:80%; max-height:200px; margin-bottom:20px; margin-top:10px; border-radius: 10px;" id="output2"><br>
+                        <input required id="b642" style="display:none;" type="text" name="b642" value="{{admin.adminLogoImageUrl}}"/>
+
+                         <label class="cameraButton" style="text-align:center;">Select Logo File
+                             <input type="file" name="logo" id="picture2" accept="image/*" style="display:none;"/>
+                         </label>
+                    </center>
+                    <script>
+                        function readFile() {
+
+			                if (this.files && this.files[0]) {
+
+					            var FR= new FileReader();
+
+					            FR.addEventListener("load", function(e) {
+ 							        document.getElementById("output2").src       = e.target.result;
+ 							        document.getElementById("b642").value = e.target.result;
+ 							        document.getElementById("b642").style.visibility = "hidden";
+					            });
+
+					            FR.readAsDataURL( this.files[0] );
+
+					            ImageTools.resize(this.files[0], {
+   							        width: 200, // maximum width
+   							        height: 200 // maximum height
+						        }, function(blob, didItResize) {
+   							        // didItResize will be true if it managed to resize it, otherwise false (and will return the original file as 'blob')
+   							        document.getElementById('output2').src = window.URL.createObjectURL(blob);
+   							        // you can also now upload this blob using an XHR.
+					            });
+			                }
+
+                        }
+                        document.getElementById("b642").style.visibility = "hidden";
+                        document.getElementById("picture2").addEventListener("change", readFile);
+                    </script>
+                </div>
+
+
+        {% if admin.adminCompany %}
+        <div class="form-group">
+			<p>Company <span>*</span></p>
+			<span class="icon-case"><i class="fa fa-print"></i></span>
+                <input type="text" name="company" id="company" data-rule="required" data-msg="" required id="company" value="{{admin.adminCompany}}"/>
+                <div class="validation"></div>
+			</div>
+        {% endif %}
+	</div>
+        {% else %}
+        <div class="rightcontact">
+            <a href="{% url 'vacay:show_my_loc' %}" id="earth"><img src="/static/vacay/images/earth.gif" style="width:80px; height:auto;margin-top:20px;" ></a><h5 style="color:white;margin-left:120px;">...to Map</h5>
+      <div class="gif-case">
+          <iframe src="https://www.youtube.com/embed/aEmSNeHiUtg?autoplay=1" autobuffer width="250" height="200" style="border-radius: 1.5%;" frameborder="10" allowfullscreen></iframe>
+      </div>
+        </div>
+        {% endif %}
+	</div>
+<button type="submit" class="bouton-update">UPDATE</button>
+
+</form>
+
+{% endif %}
+
+<!--<script src="https://code.jquery.com/jquery-1.12.4.js"></script>-->
+<!--<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>-->
+<!--<script>-->
+<!--    $( function() {-->
+<!--    $( "#edit" ).draggable();-->
+<!--  } );-->
+<!--</script>-->
+
+<script>
+
+var crop_max_width = 250;
+var crop_max_height = 250;
+var jcrop_api;
+var canvas;
+var context;
+var image;
+
+var prefsize;
+
+$("#file").change(function() {
+  loadImage(this);
+});
+
+function loadImage(input) {
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
+    canvas = null;
+    reader.onload = function(e) {
+      image = new Image();
+      image.onload = validateImage;
+      image.src = e.target.result;
+    }
+    reader.readAsDataURL(input.files[0]);
+    document.getElementById("cropbutton").style.display = "block";
+    document.getElementById("picture").style.display = "none";
+  }
+}
+
+function dataURLtoBlob(dataURL) {
+  var BASE64_MARKER = ';base64,';
+  if (dataURL.indexOf(BASE64_MARKER) == -1) {
+    var parts = dataURL.split(',');
+    var contentType = parts[0].split(':')[1];
+    var raw = decodeURIComponent(parts[1]);
+
+    return new Blob([raw], {
+      type: contentType
+    });
+  }
+  var parts = dataURL.split(BASE64_MARKER);
+  var contentType = parts[0].split(':')[1];
+  var raw = window.atob(parts[1]);
+  var rawLength = raw.length;
+  var uInt8Array = new Uint8Array(rawLength);
+  for (var i = 0; i < rawLength; ++i) {
+    uInt8Array[i] = raw.charCodeAt(i);
+  }
+
+  return new Blob([uInt8Array], {
+    type: contentType
+  });
+}
+
+function validateImage() {
+  if (canvas != null) {
+    image = new Image();
+    image.onload = restartJcrop;
+    image.src = canvas.toDataURL('image/png');
+  } else restartJcrop();
+}
+
+function restartJcrop() {
+  if (jcrop_api != null) {
+    jcrop_api.destroy();
+  }
+  $("#views").empty();
+  $("#views").append("<canvas id=\"canvas\">");
+  canvas = $("#canvas")[0];
+  context = canvas.getContext("2d");
+  canvas.width = image.width;
+  canvas.height = image.height;
+  context.drawImage(image, 0, 0);
+  $("#canvas").Jcrop({
+    onSelect: selectcanvas,
+    onRelease: clearcanvas,
+    boxWidth: crop_max_width,
+    boxHeight: crop_max_height
+  }, function() {
+    jcrop_api = this;
+  });
+//  clearcanvas();
+}
+
+function clearcanvas() {
+  prefsize = {
+    x: 0,
+    y: 0,
+    w: canvas.width,
+    h: canvas.height,
+  };
+}
+
+function selectcanvas(coords) {
+  prefsize = {
+    x: Math.round(coords.x),
+    y: Math.round(coords.y),
+    w: Math.round(coords.w),
+    h: Math.round(coords.h)
+  };
+
+  $('#x').val(Math.round(coords.x));
+  $('#y').val(Math.round(coords.y));
+  $('#w').val(Math.round(coords.w));
+  $('#h').val(Math.round(coords.h));
+
+}
+
+function applyCrop() {
+  canvas.width = prefsize.w;
+  canvas.height = prefsize.h;
+  context.drawImage(image, prefsize.x, prefsize.y, prefsize.w, prefsize.h, 0, 0, canvas.width, canvas.height);
+  validateImage();
+}
+
+$("#cropbutton").click(function(e) {
+  applyCrop();
+});
+
+
+</script>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

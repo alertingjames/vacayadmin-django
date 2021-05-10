@@ -1,0 +1,278 @@
+{% extends 'vacay/base_emprofile.html' %}
+{% block title %}{{user.first_name}} {{user.last_name}}'s Profile{% endblock %}
+{% block body %}
+
+<br>
+<br>
+<br>
+<style>
+
+html, body{
+  background: linear-gradient(0deg,rgba(100,150,250,0.0),rgba(100,150,250,0.3),rgba(100,150,250,0.3),rgba(100,150,250,0.0)), url("/static/vacay/images/comemback.jpg") no-repeat center center fixed;
+  background-size:cover;
+}
+
+img {
+  border-radius: 50%;
+  height: 80px;
+  width: 80px;
+}
+
+.info p {
+  text-align:center;
+  color: #999;
+  text-transform:none;
+  font-weight:600;
+  font-size:15px;
+  margin-top:2px
+}
+
+.info i {
+  color:#F6AA93;
+}
+
+form h1 {
+  font-size: 25px;
+  padding: 19px 22px;
+  border-radius: 5px 5px 0px 0px;
+  margin: auto;
+  color: #F7D479;
+  text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.7);
+  text-align:center;
+  font-weight:600;
+  font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+}
+
+#edit {
+  border-radius: 5px;
+  max-width:100%;
+  height:auto;
+  margin-bottom: auto;
+  margin-left:auto;
+  margin-right:auto;
+  margin-top:2%;
+  opacity:0.9;
+  overflow: hidden;
+}
+
+p span {
+  color: #F00;
+}
+
+p {
+  margin: 0px;
+  font-weight: 600;
+  line-height: 2;
+  color:#fff;
+}
+
+h1 {
+  text-align:center;
+  color: #666;
+  text-shadow: 1px 1px 0px #FFF;
+  margin:50px 0px 0px 0px
+}
+
+input {
+  border-radius: 0px 50px 50px 0px;
+  border: 1px solid #eee;
+  margin-bottom: 15px;
+  margin-right:auto;
+  width: 92%;
+  height: 42px;
+  float: middle;
+  padding: 0px 15px;
+  opacity: 0.8;
+  color:black;
+  text-align:left;
+}
+
+a {
+  text-decoration:inherit
+}
+
+.form-group {
+  overflow: hidden;
+  width:100%;
+}
+
+.icon-case {
+  width: 8%;
+  float: left;
+  border-radius: 50px 0px 0px 50px;
+  background:green;
+  height:42px;
+  position: relative;
+  text-align: center;
+  line-height:40px;
+  padding-top:11px;
+}
+
+i {
+  color:yellow;
+}
+
+.contentform {
+  float:middle;
+  margin:auto;
+}
+
+.formcontent {
+  width:100%;
+  float:middle;
+  margin:auto;
+  box-sizing: border-box;
+}
+
+
+</style>
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../lib/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+
+  <form id="edit" action="#" method="post" enctype="multipart/form-data">
+	  {% csrf_token %}
+      <h1 style="font-size:25px; font-weight:800; margin-bottom:30px;
+        color: #ffe680; text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.7); text-align:center; width:100%;">Employee's Profile</h1>
+      <div class="container-fluid" style="margin-top:2%;">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="pan" style="max-width:500px; height:auto; margin-bottom: auto; margin-left:auto; margin-right:0; opacity:0.9; overflow: hidden;">
+                        <div class="contentform">
+                            <div class="formcontent">
+                                <div class="form-group" style="margin-bottom:20px;">
+                                    <center>
+                                        <div style="width:80%; height:auto; box-shadow:0px 0px 15px rgba(0,0,0,0.5); padding:10px;
+                                                margin-top:10px; margin-bottom:10px; border-radius: 50%; text-align:center;">
+                                            <a href="{{user.photo_url}}" target="_blank">
+                                                <img src="{{user.photo_url}}" style="max-width:160px; width:auto; height:auto; max-height:200px; border-radius: 50%;" id="output">
+                                            </a>
+                                        </div>
+                                    </center>
+                                    <input type="hidden" name="photo" value="{{user.photo_url}}">
+                                    <input type="hidden" name="name" value="{{user.first_name}} {{user.last_name}}">
+                                    <input type="hidden" name="first_name" value="{{user.first_name}}">
+                                    <input type="hidden" name="last_name" value="{{user.last_name}}">
+                                    <input type="hidden" name="email" value="{{user.email}}">
+                                    <input type="hidden" name="interests" value="{{user.interests}}">
+                                    <input type="hidden" name="relationship" value="{{user.relationship}}">
+                                    <input type="hidden" name="survey" value="{{user.survey}}">
+                                    <center>
+                                        <div style="font-size:22px; font-weight:600; color:white;">{{user.first_name}} {{user.last_name}}</div>
+                                        <div style="font-size:18px; color:white;">{{user.email}}</div>
+                                        <div id="surv" style="float:left; padding:0px 16px 0px 16px; color: #fff; font-weight:500;
+                                            font-size:16px; width:100%; text-align:left; white-space: pre-line; display:block;">
+                                            {{user.survey}}
+                                        </div>
+                                    </center>
+                                </div>
+                                <div class="form-group">
+                                    <p>Current Job <span>*</span></p>
+                                    <span class="icon-case"><i class="fa fa-briefcase"></i></span>
+                                    <input type="text" name="job" data-rule="required" data-msg="" required id="job" value="{{user.job}}" readonly/>
+                                    <div class="validation"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="pan2" style="max-width:500px; height:auto; margin-bottom: auto; margin-left:0; margin-right:auto; opacity:0.9; overflow: hidden;">
+                        <div class="contentform">
+                            <div class="formcontent">
+                                <div class="form-group">
+                                    <p>City <span>*</span></p>
+                                    <a href="https://www.google.com/maps/search/?api=1&query={{user.address}}" target="_blank">
+                                        <span class="icon-case"><i class="fa fa-location-arrow"></i></span>
+                                        <input type="text" name="city" data-rule="required" data-msg="" required value="{{user.address}}" style="color:red; text-decoration: underline;" readonly/>
+                                    </a>
+                                    <div class="validation"></div>
+                                </div>
+                                <div class="form-group">
+                                    <p>Age <span>*</span></p>
+                                    <span class="icon-case"><i class="fa fa-child"></i></span>
+                                    <input type="text" name="age" data-rule="required" data-msg="" required id="age" value="{{user.age}}" readonly/>
+                                    <div class="validation"></div>
+                                </div>
+                                <div class="form-group">
+                                    <p>Phone Number <span>*</span></p>
+                                    <span class="icon-case"><i class="fa fa-phone"></i></span>
+                                    <input type="text" name="phone" data-rule="required" data-msg="" required id="phone" value="{{user.phone_number}}" readonly/>
+                                    <div class="validation"></div>
+                                </div>
+                                <div class="form-group">
+                                    <p>Education <span>*</span></p>
+                                    <span class="icon-case"><i class="fa fa-mortar-board"></i></span>
+                                    <input type="text" name="education" data-rule="required" data-msg="" required id="education" value="{{user.education}}" readonly/>
+                                    <div class="validation"></div>
+                                </div>
+                                <div class="form-group" style="padding:10px;">
+                                    <div style="width:100%;">
+                                        <p>Interests <span>*</span></p>
+                                        <div id="interests" style="padding:0px 8px 8px 30px; color: #fff; font-weight:500;
+                                            font-size:16px; text-align:left; white-space: pre-line; word-break: break-all; word-wrap: break-word;">
+                                            {{user.interests}}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p style="width:100%;">{% if 'common' in user.relationship %}Info{% else %}Cohort{% endif %} <span>*</span></p>
+                                        <div id="relationship" style="padding:0px 8px 8px 30px; color: #fff; font-weight:500; font-size:16px; text-align:left; white-space: pre-line;">
+                                            {{user.relationship}}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {% if user.em_millennial != '' and user.em_millennial != 'None' %}
+                                <div class="form-group">
+                                    <p>Millennial/Gen Xer <span>*</span></p>
+                                    <span class="icon-case"><i class="fa fa-leaf"></i></span>
+                                    <input type="text" name="millennial" data-rule="required" data-msg="" required id="millennial" value="{{user.em_millennial}}" readonly/>
+                                    <div class="validation"></div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+      </div>
+
+  </form>
+
+<script>
+    if(document.getElementById("relationship").innerHTML.includes("common")){
+        document.getElementById("relationship").innerHTML = document.getElementById("relationship").innerHTML.replace("common", "");
+    }
+    var surflag = false;
+    function show_survey(){
+        var survey = document.getElementById('surv');
+        if (surflag){
+            surflag = false;
+            survey.style.display = 'none';
+        }else {
+            surflag = true;
+            survey.style.display = 'block';
+        }
+    }
+</script>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

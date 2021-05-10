@@ -1,0 +1,121 @@
+{% extends 'vacay/base_broadmoor_home.html' %}
+{% block title %}Welcome to VaCay{% endblock %}
+{% block body %}
+<br>
+<br>
+<br>
+<br>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<style>
+
+html, body{
+   background: url("/static/vacay/images/loginbackg.jpg") no-repeat center center fixed;
+   background-size:cover;
+}
+
+.welcome_panel{
+   box-shadow: 10px 10px 0px rgba(0, 0, 0, 0.25);
+   background:white;
+   padding:10px;
+   background: white url("/static/vacay/images/pattern2.jpg");
+   background-size:100%,100%;
+}
+#icon {
+  border-radius: 50%;
+  height: 50px;
+  width: 50px;
+}
+
+.mySlides {display:none;}
+.mySlides1 {display:none;}
+.mySlides2 {display:none;}
+
+</style>
+
+<div class="welcome_panel" style="width:700px; z-index:10; border-radius:3px; top:150px; position:fixed; left:50%; float:middle; transform:translate(-50%, -50%);">
+    <img class="w3-circle" src="/static/vacay/images/vacaylogo.jpg" style="width:80px; margin-top:5px; margin-left: 15px; z-index:12; position:fixed;"/>
+    <center><h1 class="home_welcome" style="font-family:Tahoma; font-weight:700;">Welcome!</h1></center>
+    <center><p style="font-family:Tahoma; font-weight:700; font-size:18px; color:#027608;">VaCay</p></center>
+</div>
+<img id="icon" src="/static/vacay/images/gif1.gif" style="width:50px; height:auto; z-index:15; position:fixed; margin-left:10px;" >
+<!--<img id="icon2" src="/static/vacay/images/beautyservice.gif" style="width:200px; height:auto; margin-top:20px; border-radius: 8px; margin-left:20px; border: 3px solid white; z-index:4; position:fixed;">-->
+
+<iframe id="icon2" src="https://www.youtube.com/embed/rYwAQ-tboz0?autoplay=1&loop=1" width="300" height="250" style="margin-top:350px;
+            border-radius: 8px; border: 3px solid white; z-index:4; position:fixed; left:50%; float:middle;
+            transform:translate(-50%, -50%);" autobuffer allowfullscreen></iframe>
+
+    <div style="margin-top:450px; position:fixed; left:50%; float:middle; transform:translate(-50%, -50%); display:none;">
+        <center><div class="w3-content w3-section" style="width:auto; height:200px; margin-top:300px; z-index:30; position:fixed; left:10%; float:middle; transform:translate(-50%, -50%);">
+            {% for adminUser in adminUsers %}
+                <img class="mySlides" src="{{adminUser.adminLogoImageUrl}}" style="height:100%; width:auto; border-radius: 50%; border: 3px solid green;">
+            {% endfor %}
+        </div>
+            </center>
+        <div style="width:100%;">
+            <table style="width:100%; height:auto;" id="table">
+                <tr>
+                    <td style="">
+                        <div class="w3-content w3-section" style="width:400px; height:400px; min-height:400px; max-height:400px; min-width:400px; max-width:400px; overflow:hidden; text-align:center; margin:10px; border-radius:10%;">
+                            {% for broadmoor in broadmoors %}
+                            <img class="mySlides1" src="{{broadmoor.bm_proImageUrl}}" style="width:auto; height:100%; border-radius:10%; margin:auto;">
+                            {% endfor %}
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+
+
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+var nn = 0;
+var myIndex = 0;
+var myIndex1 = 0;
+var myIndex2 = 0;
+carousel();
+carousel1();
+carousel2();
+
+function carousel() {
+    var i;
+    var x = document.getElementsByClassName("mySlides");
+    for (i = 0; i < x.length; i++) {
+       x[i].style.display = "none";
+    }
+    myIndex++;
+    if (myIndex > x.length) {myIndex = 1}
+    x[myIndex-1].style.display = "block";
+
+    setTimeout(carousel, 2000); // Change image every 2 seconds
+}
+
+function carousel1() {
+    var i;
+    var x = document.getElementsByClassName("mySlides1");
+    for (i = 0; i < x.length; i++) {
+      x[i].style.display = "none";
+    }
+    myIndex1++;
+    if (myIndex1 > x.length) {myIndex1 = 1}
+    x[myIndex1-1].style.display = "block";
+    setTimeout(carousel1, 2500);
+}
+function carousel2() {
+    var i;
+    var x = document.getElementsByClassName("mySlides2");
+    for (i = 0; i < x.length; i++) {
+      x[i].style.display = "none";
+    }
+    myIndex2++;
+    if (myIndex2 > x.length) {myIndex2 = 1}
+    x[myIndex2-1].style.display = "block";
+    setTimeout(carousel2, 2300);
+}
+
+  </script>
+{% endblock %}

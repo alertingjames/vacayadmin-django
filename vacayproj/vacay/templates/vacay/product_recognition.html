@@ -1,0 +1,251 @@
+{% extends 'vacay/base_search.html' %}
+{% block title %}Search Products{% endblock %}
+{% block body %}
+
+<br>
+<br>
+<br>
+<style>
+
+html, body{
+  background: linear-gradient(0deg,rgba(20,150,250,0.5),rgba(0,100,250,0.0)), url("/static/vacay/images/beautybackground.jpg") no-repeat center center fixed;
+  background-size:cover;
+}
+
+form h1 {
+  font-size: 22px;
+  color: rgb(255, 255, 255);
+  padding: 19px 22px;
+  border-radius: 5px 5px 0px 0px;
+  margin: auto;
+  text-shadow: none;
+  text-align:middle;
+  font-family: Verdana;
+}
+
+#edit {
+  border-radius: 5px;
+  width:auto;
+  height:auto;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left:auto;
+  margin-right:auto;
+  opacity:0.9;
+  overflow: hidden;
+}
+
+p span {
+  color: #F00;
+}
+
+p {
+  margin: 0px;
+  font-weight: 600;
+  line-height: 2;
+  color:#fff;
+}
+
+h1 {
+  text-align:center;
+  color: #666;
+  text-shadow: 1px 1px 0px #FFF;
+  margin:50px 0px 0px 0px
+}
+
+input {
+  border-radius: 0px 50px 50px 0px;
+  border: 1px solid #eee;
+  margin-bottom: 15px;
+  margin-right:auto;
+  width: 92%;
+  height: 42px;
+  float: middle;
+  padding: 0px 15px;
+  opacity: 0.8;
+  color:blue;
+}
+
+.form-group {
+  overflow: hidden;
+  width:100%;
+}
+
+.contentform {
+  float:middle;
+  margin:auto;
+}
+
+.bouton-update{
+  background: linear-gradient(90deg, rgb(132, 88, 1), rgb(132, 88, 1), rgba(132, 88, 1, 0.8),rgba(132, 88, 1, 0.0));
+  color: #FFF;
+  text-align: left;
+  width: 50%;
+  border:0;
+  padding: 12px 18px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.formcontent {
+  width:auto;
+  float:middle;
+  margin:auto;
+  box-sizing: border-box;
+  padding: 0px;
+}
+
+label.cameraButton {
+  display: inline-block;
+  /* Styles to make it look like a button */
+  padding-top: 0.6em;
+  padding-bottom: 0.3em;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  border: 2px solid #666;
+  border-color: #EEE #CCC #CCC #EEE;
+  border-radius:50px;
+  font-size:16px;
+  color:white;
+  width:50%;
+  height:45px;
+  text-align:center;
+  background-color: green;
+}
+
+/* Look like a clicked/depressed button */
+label.cameraButton:active {
+  border-color: #CCC #EEE #EEE #CCC;
+}
+
+/* This is the part that actually hides the 'Choose file' text box for camera inputs */
+label.cameraButton input[accept*="image"] {
+  display: none;
+}
+
+.pan {
+  max-width:500px;
+  width:auto;
+  height:auto;
+  margin-bottom: auto;
+  margin-left:auto;
+  margin-right:0;
+  opacity:0.9;
+  overflow: hidden;
+}
+
+.pan2 {
+  max-width:500px;
+  width:auto;
+  height:auto;
+  margin-bottom: auto;
+  margin-left:0;
+  margin-right:auto;
+  opacity:0.9;
+  overflow: hidden;
+}
+
+</style>
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--<meta name="mobile-web-app-capable" content="yes">-->
+<!--<meta name="apple-mobile-web-app-capable" content="yes">-->
+<link rel="stylesheet" href="../lib/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<img src="/static/vacay/images/gif1.gif" class="glyphicon glyphicon-fire" aria-hidden="true" style="position:fixed; left:50%; float:middle; border-radius: 1px;
+	transform:translate(-50%, -50%); width:80px; z-index:2000; top:120px; display: none;" id="gif">
+
+<img src="/static/vacay/images/vacaylogo.jpg" style="position:relative; width:60px; height:60px; border-radius:3%; z-index:100; left:3%; margin-top:1%;">
+
+  <form id="edit" action="{% url 'amazon' %}" method="post" enctype="multipart/form-data">
+	  {% csrf_token %}
+	    <h1>Upload photo to search</h1>
+      <div class="container-fluid" style="margin-top:2%;">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="pan">
+                    <div class="contentform">
+		                <div class="formcontent">
+                            <div class="form-group" style="width:auto; margin-bottom:20px;">
+				                <center>
+                                    <img src="/static/vacay/images/aquarium.png" style="width:300px; height:auto; margin-top:0px; margin-bottom:10px;" id="preview">
+                                    <a href="https://cayley.pythonanywhere.com">
+                                        <i class="fa fa-refresh" style="color:white; font-size:22px; float:right; border-radius:50%; margin-left:5px;
+                                                padding:8px; z-index:3000; position:fixed; box-shadow:0 0 10px rgba(0,0,0,0.3);"></i>
+                                    </a>
+                                </center>
+				                <canvas id="canvas" width="240" height="240" style="border-radius:50%; display:none;"></canvas>
+				                <input required id="b64" style="display:none;" type="text" name="b64"/>
+				                <center>
+                                    <label class="cameraButton"><i class="fa fa-camera-retro" style="font-size:20px; color:white; margin-right:8px;"></i>Load Photo
+                                        <input type="file" name="photo" value="http://lorempixel.com/100/100/people/9" id="picture" accept="image/*"/>
+                                    </label>
+                                </center>
+                                <script>
+                                  function readFile() {
+                    
+                    			    if (this.files && this.files[0]) {
+                    					var FR= new FileReader();
+                    					FR.addEventListener("load", function(e) {
+                     						document.getElementById("preview").src = e.target.result;
+                     						document.getElementById("b64").value = e.target.result;
+                    					});
+                    
+                    					FR.readAsDataURL( this.files[0] );
+                    			    }
+                    
+                                  }
+                                  document.getElementById("picture").addEventListener("change", readFile);
+                              </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="pan2">
+                    <div class="contentform">
+		                <div class="formcontent">
+                            <div class="form-group" style="text-align:center;">
+                                <button type="submit" class="bouton-update" onclick="return checkForm()">
+                                    <i class="fa fa-search" style="margin-right:15px; font-size:20px; color:white;"></i>Search in Amazon</button>
+			                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+</form>
+
+<script>
+    function progressBar(){
+        var photo = document.getElementById("b64").value;
+        if (photo.length > 0){
+            document.getElementById("gif").style.display = "block";
+        }else {
+            alert("Please upload a photo to search...");
+        }
+    }
+</script>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

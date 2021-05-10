@@ -1,0 +1,1162 @@
+{% extends 'vacay/base_emprofile.html' %}
+{% block title %}Group Message To Employees{% endblock %}
+{% block body %}
+
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<style>
+
+html, body{
+  background: linear-gradient(0deg,rgba(20,150,250,0.3),rgba(0,100,250,0.3)), url("/static/vacay/images/employeebackg.png") no-repeat center center fixed;
+  background-size:cover;
+}
+
+img {
+  border-radius: 50%;
+  height: 80px;
+  width: 80px;
+}
+
+.info p {
+  text-align:center;
+  color: #999;
+  text-transform:none;
+  font-weight:600;
+  font-size:15px;
+  margin-top:2px
+}
+
+.info i {
+  color:#F6AA93;
+}
+form h1 {
+  font-size: 22px;
+  color: #fff;
+  padding: 19px 22px;
+  border-radius: 5px 5px 0px 0px;
+  font-weight:800;
+  margin: auto;
+  text-shadow: none;
+  text-align:middle;
+  font-family: verdana;
+}
+
+#edit {
+  border-radius: 5px;
+  max-width:700px;
+  width:auto;
+  height:auto;
+  margin-bottom: auto;
+  margin-left:auto;
+  margin-right:auto;
+  margin-top:auto;
+  opacity:0.9;
+  overflow: hidden;
+}
+
+
+p span {
+  color: #F00;
+}
+
+p {
+  margin: 0px;
+  font-weight: 600;
+  line-height: 3;
+  color:#fff;
+  font-size:14px;
+}
+
+h1 {
+  text-align:center;
+  color: #666;
+  text-shadow: 1px 1px 0px #FFF;
+  margin:50px 0px 0px 0px
+}
+
+input {
+  border-radius: 0px 50px 50px 0px;
+  border: 1px solid #eee;
+  margin-bottom: 15px;
+  margin-right:auto;
+  width: 92%;
+  height: 42px;
+  float: middle;
+  padding: 0px 15px;
+  opacity: 0.8;
+  color:black;
+  font-size:18px;
+  font-weight:500;
+  text-align:left;
+}
+
+select {
+  border-radius: 0px 50px 50px 0px;
+  border: 1px solid #eee;
+  margin-bottom: 15px;
+  margin-right:auto;
+  width: 92%;
+  height: 42px;
+  float: middle;
+  padding: 0px 15px;
+  opacity: 0.8;
+  color:black;
+  font-size:18px;
+  font-weight:500;
+  text-align:left;
+}
+
+option{
+    color:black;
+    font-size:18px;
+    font-weight:500;
+}
+
+a {
+  text-decoration:inherit
+}
+
+textarea {
+  border-radius: 5px;
+  border: 1px solid #EEE;
+  margin: 0;
+  width: 100%;
+  height: 130px;
+  float: left;
+  padding: 15px 15px;
+  opacity: 0.8;
+  color:black;
+}
+
+.form-group {
+  overflow: hidden;
+  width:100%;
+}
+
+.icon-case {
+  width: 8%;
+  float: left;
+  border-radius: 50px 0px 0px 50px;
+  background:green;
+  height:42px;
+  position: relative;
+  text-align: center;
+  line-height:40px;
+  padding-top:11px;
+}
+
+i {
+  color:yellow;
+}
+
+.contentform {
+  padding: 10px;
+  float:middle;
+  margin:auto;
+}
+
+.bouton-update{
+  background-color: #845801;
+  color: #FFF;
+  text-align: center;
+  width: 100%;
+
+  margin-bottom:10%;
+  border:0;
+  padding: 12px 18px;
+  border-radius: 50px 50px 50px 50px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.formcontent {
+  width:100%;
+  float:middle;
+  margin:auto;
+  <!--border-right: 1px dotted #CCC;-->
+  box-sizing: border-box;
+  padding: 0px 10px 0px 10px;
+}
+
+.validation {
+  display:none;
+  margin: 0 0 10px;
+  font-weight:400;
+  font-size:13px;
+  color: #DE5959;
+}
+
+#sendmessage {
+  border:1px solid #fff;
+  display:none;
+  text-align:center;
+  margin:10px 0;
+  font-weight:600;
+  margin-bottom:30px;
+  background-color: #EBF6E0;
+  color: #5F9025;
+  border: 1px solid #B3DC82;
+  padding: 13px 40px 13px 18px;
+  border-radius: 3px;
+  box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.03);
+}
+
+#sendmessage.show,.show  {
+  display:block;
+}
+
+th {color:white;}
+
+td {text-align:middle;}
+
+#container {
+    top:400px;
+    width: 480px;
+    height: 360px;
+    position:fixed;
+    z-index:100;
+    left:50%;
+    display:none;
+    transform:translate(-50%, -50%);
+    border: 10px #333 solid;
+}
+
+label.viewembutton {
+    display: inline-block;
+    border: 2px solid #666;
+    padding-top:10px;
+    border-color: #EEE #CCC #CCC #EEE;
+    border-radius:50px;
+    font-size:14px;
+    color:white;
+    width:220px;
+    height:45px;
+    text-align:center;
+    background-color: green;
+}
+
+#map {
+    border-radius:15px;
+  border: 0px solid #eee;
+  width: 30px;
+  height: 30px;
+  opacity: 0.8;
+  background-image: url(/static/vacay/images/loc.png); /* 16px x 16px */
+  background-color: transparent; /* make the button transparent */
+  background-repeat: no-repeat;  /* make the background image appear only once */
+  background-position: 0px 0px;  /*
+}
+
+label input {
+  display: none;/* <-- hide the default checkbox */
+}
+
+label span {/* <-- style the artificial checkbox */
+  height: 25px;
+  width: 25px;
+  margin-right:20px;
+  border: 1px solid white;
+  display: inline-block;
+  position: relative;
+}
+
+[type=checkbox]:checked + span:before {/* <-- style its checked state..with a ticked icon */
+  content: '\2714';
+  position: absolute;
+  top: 0px;
+  left: 5px;
+}
+
+#checkbox-panel {
+    padding-top:10px;
+}
+
+</style>
+
+<script>
+	history.pushState(null, null, location.href);
+	window.onpopstate = function () {
+        history.go(1);
+    };
+</script>
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../lib/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<img src="/static/vacay/images/processing.gif" class="glyphicon glyphicon-fire" aria-hidden="true" style="position:fixed; left:50%; float:middle;
+	transform:translate(-50%, -50%); width:auto; z-index:100; top:120px; display: none;" id="gif">
+
+  <form id="edit" action="/messagebygrouping" method="post" enctype="multipart/form-data">
+	  {% csrf_token %}
+	    <h1>Send Message To Your Employees<br>By These Options</h1>
+
+    <div class="contentform">
+
+		<div class="formcontent">
+
+			<div class="form-group" style="margin-top:30px;">
+			    <div style="color:red; font-size:20px;">COHORT</div>
+                <p>You can send message to the employees in this cohort <span>*</span></p>
+                <!--<div style="background:green; color:#fff; width:auto; padding:10px 20px; text-align:center;">Cohort</div>-->
+                <span class="icon-case"><i class="fa fa-folder-open-o"></i></span>
+                <select name="cohort" id="cohort">
+                    <option value="" selected disabled>Select a cohort...</option>
+                    <option value="Cohort 1">Cohort 1</option>
+                    <option value="Cohort 2">Cohort 2</option>
+                    <option value="Cohort 3">Cohort 3</option>
+                    <option value="Cohort 4">Cohort 4</option>
+                    <option value="Cohort 5">Cohort 5</option>
+                    <option value="Cohort 6">Cohort 6</option>
+                    <option value="Cohort 7">Cohort 7</option>
+                </select>
+			</div>
+
+			<div class="form-group" style="margin-top:30px;">
+			    <div style="color:red; font-size:20px;">ANNOUNCEMENT</div>
+			    <p>You can send message to the employees that signed up with this announcement posted <span>*</span></p>
+                <span class="icon-case"><i class="fa fa-bullhorn"></i></span>
+                <select name="announcement" id="announcement">
+                    <option value="" selected disabled>Select an annoucement...</option>
+                    {% for announce in announces %}
+                        <option value="{{announce.id}}">{{announce.an_title}} ({{announce.an_audience}})</option>
+                    {% endfor %}
+                </select>
+                <div id="view_employees" style="margin-top:15px; width:auto; padding-right:10px; float:right;">
+                    <a href="#" onclick="javascript:view_employees();">
+                        <label class="viewembutton">View employees signed up</label>
+                    </a>
+                </div>
+                <script>
+                    function view_employees(){
+                        var selectedanid = document.getElementById('announcement').value;
+                        if(selectedanid == ""){
+                            alert('Please choose an announcement');
+                            return;
+                        }
+                        window.location.href = "/emsignedupforan?an_id=" + selectedanid;
+                    }
+                </script>
+			</div>
+
+            <div class="form-group" style="margin-top:30px;">
+                <div style="color:red; font-size:20px;">INTERESTS</div>
+                <p>You can send message to the employees that have these interests <span>*</span></p>
+                <span class="icon-case"><i class="fa fa-fire"></i></span>
+                <input type="text" name="interests" data-rule="required" data-msg=""
+                       required id="interests" value="" onclick="show_panel()" placeholder="Click here to select interests" readonly/>
+			</div>
+            <div class="form-group" style="display:none;" id="checkbox-panel">
+                <label style="color:white; font-size:16px; margin-left:30px;">
+                    <input type='checkbox' id="run" name="run" value="" hidden onchange="eventrun()">
+                    <span></span>Run
+                </label><br>
+                <div class="form-group" style="margin-left:20px; display:none;" id="run-panel">
+                    <label style="color:white; font-size:16px; margin-left:50px;">
+                        <input type='checkbox' id="walk" name="walk" value="" hidden onchange="eventwalk()">
+                        <span></span>'I walk because it burns fat'runs
+                    </label><br>
+                    <label style="color:white; font-size:16px; margin-left:50px;" onchange="event30()">
+                        <input type='checkbox' id="30mins" name="30mins" value="" hidden>
+                        <span></span>30 minutes
+                    </label><br>
+                    <label style="color:white; font-size:16px; margin-left:50px;" onchange="event1m()">
+                        <input type='checkbox' id="1mile" name="1mile" value="" hidden>
+                        <span></span>1 mile
+                    </label><br>
+                    <label style="color:white; font-size:16px; margin-left:50px;" onchange="event5m()">
+                        <input type='checkbox' id="5miles" name="5miles" value="" hidden>
+                        <span></span>5 miles
+                    </label><br>
+                    <label style="color:white; font-size:16px; margin-left:50px;" onchange="event10m()">
+                        <input type='checkbox' id="10miles" name="10miles" value="" hidden>
+                        <span></span>10 miles
+                    </label><br>
+                </div>
+                <label style="color:white; font-size:16px; margin-left:30px;">
+                    <input type='checkbox' id="golf" value="" name="golf" hidden onchange="eventgolf()">
+                    <span></span>Golf
+                </label><br>
+                <div class="form-group" style="margin-left:20px; display:none;" id="golf-panel">
+                    <label style="color:white; font-size:16px; margin-left:50px;">
+                        <input type='checkbox' id="beginner" name="beginner" value="" hidden onchange="eventbeginner()">
+                        <span></span>Beginner
+                    </label><br>
+                    <label style="color:white; font-size:16px; margin-left:50px;" onchange="eventintermediate()">
+                        <input type='checkbox' id="intermediate" name="intermediate" value="" hidden>
+                        <span></span>Intermediate
+                    </label><br>
+                    <label style="color:white; font-size:16px; margin-left:50px;" onchange="eventadvanced()">
+                        <input type='checkbox' id="advanced" name="advanced" value="" hidden>
+                        <span></span>Advanced
+                    </label><br>
+                    <label style="color:white; font-size:16px; margin-left:50px;" onchange="eventscramble()">
+                        <input type='checkbox' id="scramble" name="scramble" value="" hidden>
+                        <span></span>Scramble Secret Weapon
+                    </label><br>
+                </div>
+                <label style="color:white; font-size:16px; margin-left:30px;">
+                    <input type='checkbox' id="tennis" name="tennis" value="" hidden onchange="eventtennis()">
+                    <span></span>Tennis
+                </label><br>
+                <div class="form-group" style="margin-left:20px; display:none;" id="tennis-panel">
+                    <label style="color:white; font-size:16px; margin-left:50px;">
+                        <input type='checkbox' id="3p" name="3p" value="" hidden onchange="event3p()">
+                        <span></span>3.0+
+                    </label><br>
+                    <label style="color:white; font-size:16px; margin-left:50px;" onchange="event4p()">
+                        <input type='checkbox' id="4p" name="4p" value="" hidden>
+                        <span></span>4.0+
+                    </label><br>
+                    <label style="color:white; font-size:16px; margin-left:50px;" onchange="event5p()">
+                        <input type='checkbox' id="5p" name="5p" value="" hidden>
+                        <span></span>5.0+
+                    </label><br>
+                    <label style="color:white; font-size:16px; margin-left:50px;" onchange="event6p()">
+                        <input type='checkbox' id="6p" name="6p" value="" hidden>
+                        <span></span>6.0+
+                    </label><br>
+                    <label style="color:white; font-size:16px; margin-left:50px;" onchange="eventwtf()">
+                        <input type='checkbox' id="wtf" name="wtf" value="" hidden>
+                        <span></span>WTF does that mean
+                    </label><br>
+                </div>
+                <label style="color:white; font-size:16px; margin-left:30px;">
+                    <input type='checkbox' id="ski" name="ski" value="" hidden onchange="eventski()">
+                    <span></span>Ski & Snowboard
+                </label><br>
+                <div class="form-group" style="margin-left:20px; display:none;" id="ski-panel">
+                    <label style="color:white; font-size:16px; margin-left:50px;">
+                        <input type='checkbox' id="hot" name="hot" value="" hidden onchange="eventhot()">
+                        <span></span>Hot Chocolate & Lodge'skier'
+                    </label><br>
+                    <label style="color:white; font-size:16px; margin-left:50px;" onchange="eventbunny()">
+                        <input type='checkbox' id="bunny" name="bunny" value="" hidden>
+                        <span></span>Bunny Slopes
+                    </label><br>
+                    <label style="color:white; font-size:16px; margin-left:50px;" onchange="eventgreens()">
+                        <input type='checkbox' id="greens" name="greens" value="" hidden>
+                        <span></span>Greens
+                    </label><br>
+                    <label style="color:white; font-size:16px; margin-left:50px;" onchange="eventblues()">
+                        <input type='checkbox' id="blues" name="blues" value="" hidden>
+                        <span></span>Blues
+                    </label><br>
+                    <label style="color:white; font-size:16px; margin-left:50px;" onchange="eventblacks()">
+                        <input type='checkbox' id="blacks" name="blacks" value="" hidden>
+                        <span></span>Blacks
+                    </label><br>
+                    <label style="color:white; font-size:16px; margin-left:50px;" onchange="eventdouble()">
+                        <input type='checkbox' id="double" name="double" value="" hidden>
+                        <span></span>Double Black Diamonds
+                    </label><br>
+                    <label style="color:white; font-size:16px; margin-left:50px;" onchange="eventnotafraid()">
+                        <input type='checkbox' id="notafraid" name="notafraid" value="" hidden>
+                        <span></span>I'm not afraid of death
+                    </label><br>
+                </div>
+                <label style="color:white; font-size:16px; margin-left:30px;">
+                    <input type='checkbox' id="biking" name="biking" value="" hidden onchange="eventbiking()">
+                    <span></span>Biking
+                </label><br>
+                <div class="form-group" style="margin-left:20px; display:none;" id="biking-panel">
+                    <label style="color:white; font-size:16px; margin-left:50px;">
+                        <input type='checkbox' id="short" name="short" value="" hidden onchange="eventshort()">
+                        <span></span>Short Rides
+                    </label><br>
+                    <label style="color:white; font-size:16px; margin-left:50px;" onchange="eventlong()">
+                        <input type='checkbox' id="long" name="long" value="" hidden>
+                        <span></span>Long Rides
+                    </label><br>
+                    <label style="color:white; font-size:16px; margin-left:50px;" onchange="eventmountain()">
+                        <input type='checkbox' id="mountain" name="mountain" value="" hidden>
+                        <span></span>Mountain Rides
+                    </label><br>
+                    <label style="color:white; font-size:16px; margin-left:50px;" onchange="eventroad()">
+                        <input type='checkbox' id="road" name="road" value="" hidden>
+                        <span></span>Road Rides
+                    </label><br>
+                </div>
+                <label style="color:white; font-size:16px; margin-left:30px;">
+                    <input type='checkbox' id="fishing" name="fishing" value="" hidden onchange="eventfishing()">
+                    <span></span>Fishing
+                </label><br>
+                <div class="form-group" style="margin-left:20px; display:none;" id="fishing-panel">
+                    <label style="color:white; font-size:16px; margin-left:50px;">
+                        <input type='checkbox' id="fly" name="fly" value="" hidden onchange="eventfly()">
+                        <span></span>Fly Fishing
+                    </label><br>
+                    <label style="color:white; font-size:16px; margin-left:50px;" onchange="eventlake()">
+                        <input type='checkbox' id="lake" name="lake" value="" hidden>
+                        <span></span>Lake Fishing
+                    </label><br>
+                    <label style="color:white; font-size:16px; margin-left:50px;" onchange="eventocean()">
+                        <input type='checkbox' id="ocean" name="ocean" value="" hidden>
+                        <span></span>Ocean Fishing
+                    </label><br>
+                </div>
+                <label style="color:white; font-size:16px; margin-left:30px;">
+                    <input type='checkbox' id="surfing" name="surfing" value="" hidden onchange="eventsurfing()">
+                    <span></span>Surfing/Kitesurfing
+                </label><br>
+                <div class="form-group" style="margin-left:20px; display:none;" id="surfing-panel">
+                    <label style="color:white; font-size:16px; margin-left:50px;">
+                        <input type='checkbox' id="oceansurfing" name="oceansurfing" value="" hidden onchange="eventoceansurfing()">
+                        <span></span>Ocean Surfing
+                    </label><br>
+                    <label style="color:white; font-size:16px; margin-left:50px;" onchange="eventlakesurfing()">
+                        <input type='checkbox' id="lakesurfing" name="lakesurfing" value="" hidden>
+                        <span></span>Lake Surfing
+                    </label><br>
+                    <label style="color:white; font-size:16px; margin-left:50px;" onchange="eventkitesurfing()">
+                        <input type='checkbox' id="kitesurfing" name="kitesurfing" value="" hidden>
+                        <span></span>Kitesurfing
+                    </label><br>
+                </div>
+                <label style="color:white; font-size:16px; margin-left:30px;">
+                    <input type='checkbox' id="exploring" name="exploring" value="" hidden onchange="eventexploring()">
+                    <span></span>Exploring
+                </label><br>
+                <div class="form-group" style="margin-left:20px; display:none;" id="exploring-panel">
+                    <label style="color:white; font-size:16px; margin-left:50px;">
+                        <input type='checkbox' id="museums" name="museums" value="" hidden onchange="eventmuseums()">
+                        <span></span>Museums
+                    </label><br>
+                    <label style="color:white; font-size:16px; margin-left:50px;" onchange="eventcitytours()">
+                        <input type='checkbox' id="citytours" name="citytours" value="" hidden>
+                        <span></span>City Tours
+                    </label><br>
+                    <label style="color:white; font-size:16px; margin-left:50px;" onchange="eventnature()">
+                        <input type='checkbox' id="nature" name="nature" value="" hidden>
+                        <span></span>Nature
+                    </label><br>
+                    <label style="color:white; font-size:16px; margin-left:50px;" onchange="eventart()">
+                        <input type='checkbox' id="art" name="art" value="" hidden>
+                        <span></span>Art
+                    </label><br>
+                    <label style="color:white; font-size:16px; margin-left:50px;" onchange="eventconcerts()">
+                        <input type='checkbox' id="concerts" name="concerts" value="" hidden>
+                        <span></span>Concerts
+                    </label><br>
+                    <label style="color:white; font-size:16px; margin-left:50px;" onchange="eventlectures()">
+                        <input type='checkbox' id="lectures" name="lectures" value="" hidden>
+                        <span></span>Lectures
+                    </label>
+                </div>
+            </div>
+            <!--<div style="width:100%; color:red; font-family:cursive; margin-top:30px; font-size:16px;">Unless you select any option above, the message will be sent to all of your employees</div>-->
+            <h1 style="margin-top:30px;">Or Send Message To All Of Your Employees</h1>
+            <div style="width:100%; text-align:center; color:red; font-family:cursive; margin-top:15px; font-size:20px;"> --- Send Message ---</div>
+            <div class="form-group">
+			    <p>Subject <span>*</span></p>
+                <textarea name="subject"  rows="2" data-rule="required" data-msg="" required id="subject" placeholder="Subject" style="height:42px; padding: 10px 15px;"></textarea>
+			</div>
+            <script src="https://rawgit.com/jackmoore/autosize/master/dist/autosize.min.js"></script>
+            <div class="form-group">
+			    <p>Message Body <span>*</span></p>
+                <textarea name="body"  rows="10" data-rule="required" data-msg="" required id="body" placeholder="Write something ..."></textarea>
+			</div>
+            <script>autosize(document.getElementById("body"));</script>
+
+			<div class="form-group" style="margin-top:10%;">
+				<button type="submit" class="bouton-update">Send Message</button>
+			</div>
+	</div>
+
+	</div>
+
+  </form>
+
+<script>
+
+    var flag = false;
+    var flag2 = false;
+    var job = document.getElementById('job');
+    var city = document.getElementById('city');
+    var age = document.getElementById('age');
+    var education = document.getElementById('education');
+    var department = document.getElementById('department');
+    var millennial = document.getElementById('millennial');
+    var info = document.getElementById("info");
+
+    function show_panel(){
+        if (flag){
+            flag = false;
+            document.getElementById('checkbox-panel').style.display = 'none';
+            document.getElementById("interests").placeholder = "Click here to select your interests";
+        }
+        else if (!flag){
+            flag = true;
+            document.getElementById('checkbox-panel').style.display = 'block';
+            document.getElementById("interests").placeholder = "Click here to close the interests' panel";
+        }
+    }
+
+    function progressBar(){
+        document.getElementById("gif").style.display = "block";
+    }
+
+    function show_info_panel(){
+        if (flag2){
+            flag2 = false;
+            document.getElementById('checkbox-info').style.display = 'none';
+            document.getElementById("info").placeholder = "Click here to select your info";
+        }
+        else if (!flag2){
+            flag2 = true;
+            document.getElementById('checkbox-info').style.display = 'block';
+            document.getElementById("info").placeholder = "Click here to close the info' panel";
+        }
+    }
+
+    function post(path, params, method) {
+        method = method || "post"; // Set method to post by default if not specified.
+
+        // The rest of this code assumes you are not using a library.
+        // It can be made less wordy if you use one.
+        var form = document.createElement("form");
+        form.setAttribute("method", method);
+        form.setAttribute("action", path);
+
+        for(var key in params) {
+            if(params.hasOwnProperty(key)) {
+                var hiddenField = document.createElement("input");
+                hiddenField.setAttribute("type", "hidden");
+                hiddenField.setAttribute("name", key);
+                hiddenField.setAttribute("value", params[key]);
+
+                form.appendChild(hiddenField);
+            }
+        }
+
+        document.body.appendChild(form);
+        form.submit();
+    }
+</script>
+<!--<script>-->
+<!--// my location-->
+    <!--$.get("http://ipinfo.io", function(response) {-->
+        <!--document.getElementById("city").value = response.city;-->
+    <!--}, "jsonp");-->
+<!--</script>-->
+
+<script>
+var run = document.getElementById("run");
+var golf = document.getElementById("golf");
+var tennis = document.getElementById("tennis");
+var ski = document.getElementById("ski");
+var biking = document.getElementById("biking");
+var fishing = document.getElementById("fishing");
+var surfing = document.getElementById("surfing");
+var exploring = document.getElementById("exploring");
+
+var rpanel = document.getElementById("run-panel");
+var rwalk = document.getElementById("walk");
+var r30mins = document.getElementById("30mins");
+var r1mile = document.getElementById("1mile");
+var r5miles = document.getElementById("5miles");
+var r10miles = document.getElementById("10miles");
+
+var gpanel = document.getElementById("golf-panel");
+var gbeginner = document.getElementById("beginner");
+var gintermediate = document.getElementById("intermediate");
+var gadvanced = document.getElementById("advanced");
+var gscramble = document.getElementById("scramble");
+
+var tpanel = document.getElementById("tennis-panel");
+var t3p = document.getElementById("3p");
+var t4p = document.getElementById("4p");
+var t5p = document.getElementById("5p");
+var t6p = document.getElementById("6p");
+var twtf = document.getElementById("wtf");
+
+var spanel = document.getElementById("ski-panel");
+var shot = document.getElementById("hot");
+var sbunny = document.getElementById("bunny");
+var sgreens = document.getElementById("greens");
+var sblues = document.getElementById("blues");
+var sblacks = document.getElementById("blacks");
+var sdouble = document.getElementById("double");
+var snotafraid = document.getElementById("notafraid");
+
+var bpanel = document.getElementById("biking-panel");
+var bshort = document.getElementById("short");
+var blong = document.getElementById("long");
+var bmountain = document.getElementById("mountain");
+var broad = document.getElementById("road");
+
+var fpanel = document.getElementById("fishing-panel");
+var ffly = document.getElementById("fly");
+var flake = document.getElementById("lake");
+var focean = document.getElementById("ocean");
+
+var surpanel = document.getElementById("surfing-panel");
+var surocean = document.getElementById("oceansurfing");
+var surlake = document.getElementById("lakesurfing");
+var kitesurfing = document.getElementById("kitesurfing");
+
+var epanel = document.getElementById("exploring-panel");
+var emuseums = document.getElementById("museums");
+var ecitytours = document.getElementById("citytours");
+var enature = document.getElementById("nature");
+var eart = document.getElementById("art");
+var econcerts = document.getElementById("concerts");
+var electures = document.getElementById("lectures");
+
+function eventrun(){
+    if (run.checked){
+        run.value = "Run" ;
+        rpanel.style.display = "block";
+    }else {
+        run.value = "" ;
+        rpanel.style.display = "none";
+    }
+}
+
+function eventgolf(){
+    if (golf.checked){
+        golf.value = "Golf" ;
+        gpanel.style.display = "block";
+    }else {
+        golf.value = "" ;
+        gpanel.style.display = "none";
+    }
+}
+
+function eventtennis(){
+    if (tennis.checked){
+        tennis.value = "Tennis" ;
+        tpanel.style.display = "block";
+    }else {
+        tennis.value = "" ;
+        tpanel.style.display = "none";
+    }
+}
+
+function eventski(){
+    if (ski.checked){
+        ski.value = "Ski & Snowboard" ;
+        spanel.style.display = "block";
+    }else {
+        ski.value = "" ;
+        spanel.style.display = "none";
+    }
+}
+
+function eventbiking(){
+    if (biking.checked){
+        biking.value = "Biking" ;
+        bpanel.style.display = "block";
+    }else {
+        biking.value = "" ;
+        bpanel.style.display = "none";
+    }
+}
+
+function eventfishing(){
+    if (fishing.checked){
+        fishing.value = "Fishing" ;
+        fpanel.style.display = "block";
+    }else {
+        fishing.value = "" ;
+        fpanel.style.display = "none";
+    }
+}
+
+function eventsurfing(){
+    if (surfing.checked){
+        surfing.value = "Surfing/Kitesurfing" ;
+        surpanel.style.display = "block";
+    }else {
+        surfing.value = "" ;
+        surpanel.style.display = "none";
+    }
+}
+
+function eventexploring(){
+    if (exploring.checked){
+        exploring.value = "Exploring" ;
+        epanel.style.display = "block";
+    }else {
+        exploring.value = "" ;
+        epanel.style.display = "none";
+    }
+}
+
+// Sub Items
+
+function eventwalk(){
+    if (rwalk.checked){
+        rwalk.value = "(I walk because it burns fat)runs" ;
+    }else {
+        rwalk.value = "" ;
+    }
+}
+
+function event30(){
+    if (r30mins.checked){
+        r30mins.value = "30 minutes" ;
+    }else {
+        r30mins.value = "" ;
+    }
+}
+
+function event1m(){
+    if (r1mile.checked){
+        r1mile.value = "1 mile" ;
+    }else {
+        r1mile.value = "" ;
+    }
+}
+
+function event5m(){
+    if (r5miles.checked){
+        r5miles.value = "5 miles" ;
+    }else {
+        r5miles.value = "" ;
+    }
+}
+
+function event10m(){
+    if (r10miles.checked){
+        r10miles.value = "10 miles" ;
+    }else {
+        r10miles.value = "" ;
+    }
+}
+
+function eventbeginner(){
+    if (gbeginner.checked){
+        gbeginner.value = "Beginner" ;
+    }else {
+        gbeginner.value = "" ;
+    }
+}
+
+function eventintermediate(){
+    if (gintermediate.checked){
+        gintermediate.value = "Intermediate" ;
+    }else {
+        gintermediate.value = "" ;
+    }
+}
+
+function eventadvanced(){
+    if (gadvanced.checked){
+        gadvanced.value = "Advanced" ;
+    }else {
+        gadvanced.value = "" ;
+    }
+}
+
+function eventscramble(){
+    if (gscramble.checked){
+        gscramble.value = "Scramble Secret Weapon" ;
+    }else {
+        gscramble.value = "" ;
+    }
+}
+
+function event3p(){
+    if (t3p.checked){
+        t3p.value = "3.0+" ;
+    }else {
+        t3p.value = "" ;
+    }
+}
+
+function event4p(){
+    if (t4p.checked){
+        t4p.value = "4.0+" ;
+    }else {
+        t4p.value = "" ;
+    }
+}
+
+function event5p(){
+    if (t5p.checked){
+        t5p.value = "5.0+" ;
+    }else {
+        t5p.value = "" ;
+    }
+}
+
+function event6p(){
+    if (t6p.checked){
+        t6p.value = "6.0+" ;
+    }else {
+        t6p.value = "" ;
+    }
+}
+
+function eventwtf(){
+    if (twtf.checked){
+        twtf.value = "WTF does that mean" ;
+    }else {
+        twtf.value = "" ;
+    }
+}
+
+function eventhot(){
+    if (shot.checked){
+        shot.value = "Hot Chocolate & Lodge(skier)" ;
+    }else {
+        shot.value = "" ;
+    }
+}
+
+function eventbunny(){
+    if (sbunny.checked){
+        sbunny.value = "Bunny Slopes" ;
+    }else {
+        sbunny.value = "" ;
+    }
+}
+
+function eventgreens(){
+    if (sgreens.checked){
+        sgreens.value = "Greens" ;
+    }else {
+        sgreens.value = "" ;
+    }
+}
+
+function eventblues(){
+    if (sblues.checked){
+        sblues.value = "Blues" ;
+    }else {
+        sblues.value = "" ;
+    }
+}
+
+function eventblacks(){
+    if (sblacks.checked){
+        sblacks.value = "Blacks" ;
+    }else {
+        sblacks.value = "" ;
+    }
+}
+
+function eventdouble(){
+    if (sdouble.checked){
+        sdouble.value = "Double Black Diamonds" ;
+    }else {
+        sdouble.value = "" ;
+    }
+}
+
+function eventnotafraid(){
+    if (snotafraid.checked){
+        snotafraid.value = "I am not afraid of death" ;
+    }else {
+        snotafraid.value = "" ;
+    }
+}
+
+function eventshort(){
+    if (bshort.checked){
+        bshort.value = "Short Rides" ;
+    }else {
+        bshort.value = "" ;
+    }
+}
+
+function eventlong(){
+    if (blong.checked){
+        blong.value = "Long Rides" ;
+    }else {
+        blong.value = "" ;
+    }
+}
+
+function eventmountain(){
+    if (bmountain.checked){
+        bmountain.value = "Mountain Rides" ;
+    }else {
+        bmountain.value = "" ;
+    }
+}
+
+function eventroad(){
+    if (broad.checked){
+        broad.value = "Road Rides" ;
+    }else {
+        broad.value = "" ;
+    }
+}
+
+function eventfly(){
+    if (ffly.checked){
+        ffly.value = "Fly Fishing" ;
+    }else {
+        ffly.value = "" ;
+    }
+}
+
+function eventlake(){
+    if (flake.checked){
+        flake.value = "Lake Fishing" ;
+    }else {
+        flake.value = "" ;
+    }
+}
+
+function eventocean(){
+    if (focean.checked){
+        focean.value = "Ocean Fishing" ;
+    }else {
+        focean.value = "" ;
+    }
+}
+
+function eventoceansurfing(){
+    if (surocean.checked){
+        surocean.value = "Ocean Surfing" ;
+    }else {
+        surocean.value = "" ;
+    }
+}
+
+function eventlakesurfing(){
+    if (surlake.checked){
+        surlake.value = "Lake Surfing" ;
+    }else {
+        surlake.value = "" ;
+    }
+}
+
+function eventkitesurfing(){
+    if (kitesurfing.checked){
+        kitesurfing.value = "Kitesurfing" ;
+    }else {
+        kitesurfing.value = "" ;
+    }
+}
+
+function eventmuseums(){
+    if (emuseums.checked){
+        emuseums.value = "Museums" ;
+    }else {
+        emuseums.value = "" ;
+    }
+}
+
+function eventcitytours(){
+    if (ecitytours.checked){
+        ecitytours.value = "City Tours" ;
+    }else {
+        ecitytours.value = "" ;
+    }
+}
+
+function eventnature(){
+    if (enature.checked){
+        enature.value = "Nature" ;
+    }else {
+        enature.value = "" ;
+    }
+}
+
+function eventart(){
+    if (eart.checked){
+        eart.value = "Art" ;
+    }else {
+        eart.value = "" ;
+    }
+}
+
+function eventconcerts(){
+    if (econcerts.checked){
+        econcerts.value = "Concerts" ;
+    }else {
+        econcerts.value = "" ;
+    }
+}
+
+function eventlectures(){
+    if (electures.checked){
+        electures.value = "Lectures" ;
+    }else {
+        electures.value = "" ;
+    }
+}
+
+var surflag = false;
+function show_survey(){
+    var survey = document.getElementById('surv');
+    if (surflag){
+       surflag = false;
+       survey.style.display = 'none';
+    }else {
+       surflag = true;
+       survey.style.display = 'block';
+    }
+}
+
+var infoData = "";
+
+var singlebox = document.getElementById("single");
+var relationshipbox = document.getElementById("relationship");
+var newbornbox = document.getElementById("newborn");
+var kidsbox = document.getElementById("kids");
+var dogsbox = document.getElementById("dogs");
+
+function eventsingle(){
+    if (singlebox.checked){
+        singlebox.value = "Single" ;
+    }else {
+        singlebox.value = "" ;
+    }
+}
+function eventrelationship(){
+    if (relationshipbox.checked){
+        relationshipbox.value = "Relationship" ;
+    }else {
+        relationshipbox.value = "" ;
+    }
+}
+function eventnewborn(){
+    if (newbornbox.checked){
+        newbornbox.value = "Have Kids (Newborn - 5)" ;
+    }else {
+        newbornbox.value = "" ;
+    }
+}
+function eventkids(){
+    if (kidsbox.checked){
+        kidsbox.value = "Have Kids (6+)" ;
+    }else {
+        kidsbox.value = "" ;
+    }
+}
+function eventdogs(){
+    if (dogsbox.checked){
+        dogsbox.value = "Have Dogs" ;
+    }else {
+        dogsbox.value = "" ;
+    }
+}
+
+</script>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

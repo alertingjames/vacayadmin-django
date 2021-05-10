@@ -1,0 +1,359 @@
+ <html>
+<head>
+  <title>Search Places</title>
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js"></script>
+<script>
+var geocoder;
+var map;
+var marker;
+var infowindow;
+var addr;
+
+function initialize() {
+
+   infowindow = new google.maps.InfoWindow({
+  content: 'My Location'
+});
+  geocoder = new google.maps.Geocoder();
+  var latlng = new google.maps.LatLng(38.785678,-104.845099);
+  addr = document.getElementById('address').value;
+  if (addr){
+      codeAddress();
+  }
+  var mapOptions = {
+    zoom: 8,
+    center: latlng,
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  }
+  map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
+  google.maps.event.addListener(map, 'click', function() {
+    infowindow.close();
+  });
+}
+
+function geocodePosition(pos) {
+
+  if (marker) {
+        if (infowindow) infowindow.close();
+  }
+  infowindow = new google.maps.InfoWindow();
+  geocoder.geocode({
+    latLng: pos
+  }, function(responses) {
+    if (responses && responses.length > 0) {
+      marker.formatted_address = responses[0].formatted_address;
+    } else {
+      marker.formatted_address = 'Cannot determine address at this location.';
+    }
+
+    document.getElementById('addr').value = marker.formatted_address;
+    document.getElementById('lat').value = marker.getPosition().lat();
+    document.getElementById('lng').value = marker.getPosition().lng();
+    document.getElementById('address').value = marker.formatted_address;
+
+    document.getElementById('addr').placeholder = marker.formatted_address;
+    document.getElementById('lat').placeholder = marker.getPosition().lat();
+    document.getElementById('lng').placeholder = marker.getPosition().lng();
+    document.getElementById('address').placeholder = marker.formatted_address;
+
+    lat = marker.getPosition().lat();
+    lng = marker.getPosition().lng();
+
+    infowindow.setContent(marker.formatted_address + "<br>coordinates: " + marker.getPosition().toUrlValue(6));
+    infowindow.open(map, marker);
+  });
+}
+
+function codeAddress() {
+  var address = document.getElementById('address').value;
+  var addr;
+   infowindow = new google.maps.InfoWindow();
+
+  geocoder.geocode({
+    'address': address
+  }, function(results, status) {
+    if (status == google.maps.GeocoderStatus.OK) {
+      map.setCenter(results[0].geometry.location);
+      if (marker) {
+        marker.setMap(null);
+        if (infowindow) infowindow.close();
+      }
+      marker = new google.maps.Marker({
+        map: map,
+        draggable: true,
+        animation: google.maps.Animation.DROP,
+        position: results[0].geometry.location
+      });
+       marker.addListener('click', toggleBounce);
+      google.maps.event.addListener(marker, 'dragend', function() {
+        geocodePosition(marker.getPosition());
+      });
+      google.maps.event.addListener(marker, 'click', function() {
+        if (marker.formatted_address) {
+          addr = marker.formatted_address;
+          infowindow.setContent(marker.formatted_address + "<br>coordinates: " + marker.getPosition().toUrlValue(6));
+        } else {
+          addr = address;
+          infowindow.setContent(address + "<br>coordinates: " + marker.getPosition().toUrlValue(6));
+        }
+
+        document.getElementById('addr').value = addr;
+        document.getElementById('lat').value = marker.getPosition().lat();
+        document.getElementById('lng').value = marker.getPosition().lng();
+
+        document.getElementById('addr').placeholder = addr;
+        document.getElementById('lat').placeholder = marker.getPosition().lat();
+        document.getElementById('lng').placeholder = marker.getPosition().lng();
+
+        lat = marker.getPosition().lat();
+        lng = marker.getPosition().lng();
+
+        infowindow.open(map, marker);
+      });
+      google.maps.event.trigger(marker, 'click');
+    } else {
+      alert('Geocode was not successful for the following reason: ' + status);
+    }
+  });
+}
+
+      function toggleBounce() {
+        if (marker.getAnimation() !== null) {
+          marker.setAnimation(null);
+        } else {
+          marker.setAnimation(google.maps.Animation.BOUNCE);
+        }
+      }
+
+      function initMap() {
+
+        <!--map = map;-->
+        var pyrmont = {lat: map.getCenter().lat(), lng: map.getCenter().lng()};
+
+        map = new google.maps.Map(document.getElementById('map_canvas'), {
+          center: pyrmont,
+          zoom: 15
+        });
+
+        var service = new google.maps.places.PlacesService(map);
+        service.nearbySearch({
+          location: pyrmont,
+          radius: 500,
+          type: ['store']
+        }, callback);
+
+	    <!--map.addListener('idle', performSearch);-->
+      }
+
+	<!--function performSearch() {-->
+        <!--var request = {-->
+          <!--bounds: map.getBounds(),-->
+          <!--keyword: 'best view'-->
+        <!--};-->
+        <!--service.radarSearch(request, callback);-->
+      <!--}-->
+
+      function callback(results, status) {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+          	for (var i = 0; i < results.length; i++) {
+              createMarker(results[i]);
+            }
+        }
+        else{
+          alert("Service failed...");
+        }
+      }
+
+      function createMarker(place) {
+
+        var infowindow = new google.maps.InfoWindow();
+        var placeLoc = place.geometry.location;
+        var marker = new google.maps.Marker({
+          map: map,
+          position: place.geometry.location
+        });
+
+        google.maps.event.addListener(marker, 'click', function() {
+          infowindow.setContent(place.name);
+          infowindow.open(map, this);
+        });
+      }
+
+google.maps.event.addDomListener(window, "load", initialize);
+</script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDj9cVi6h9LTEYnSe4Dv_EvG-hxqLvM8Dg&libraries=places&callback=initAutocomplete" async defer></script>
+</head>
+<body>
+  <style>
+  html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: orange;
+}
+#map_canvas {
+  width: 100%;
+  height: 100%;
+}
+input{
+  padding:5px;
+  font-size:20px;
+  border-radius:10px;
+}
+select{
+  padding:5px;
+  font-size:20px;
+  border-radius:10px;
+}
+#button{
+  background:blue;
+  color:white;
+  border-radius:10px;
+}
+#button2{
+  background:blue;
+  color:white;
+  border-radius:10px;
+}
+@media print {
+  html,
+  body {
+    height: auto;
+  }
+  #map_canvas {
+    height: 100%;
+  }
+}
+  </style>
+
+  <form id="inputbox" action="{% url 'nearby_services' %}" method="post" style="margin-top:5px; z-index:12; margin-left:130px; position:fixed; padding:10px; box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.25); border-radius:20px;background:orange; z-index:5;">
+    {% csrf_token %}
+  <div style="display:none;">
+    <input id="addr" type="textbox" value="" placeholder="Address..." style="width:500px;" name="address">
+    <input id="lat" type="textbox" value="" placeholder="Latitude..." style="width:250px;margin-left:10px;" name="latitude">
+    <input id="lng" type="textbox" value="" placeholder="Longitude..." style="width:250px;" name="longitude">
+  </div>
+    <div style="z-index:10; position:fixed;">
+      <input id="address" type="textbox" value="" style="width:500px;" placeholder="1.Input address to Geocode..." required="address">
+      <input type="button" value="Geocode" onclick="codeAddress()" id="button">
+    </div>
+    <div style="margin-left:650px;">
+      <select name="types" required="types" style="width:250px;">
+        <option value="">2.Service Type</option>
+        <option value="Accounting">Accounting</option>
+        <option value="Airport">Airport</option>
+        <option value="Amusementpark">Amusement Park</option>
+        <option value="aquarium">Aquarium</option>
+        <option value="artgallery">Art Gallery</option>
+        <option value="atm">Atm</option>
+        <option value="bakery">Bakery</option>
+        <option value="Bank">Bank</option>
+        <option value="Bar">Bar</option>
+        <option value="Beauty-Salon">Beauty-Salon</option>
+        <option value="Bookstore">Book Store</option>
+        <option value="bowlingalley">Bowling Alley</option>
+        <option value="Busstation">Bus Station</option>
+        <option value="Bicyclestore">Bicycle Store</option>
+        <option value="Cafe">Cafe</option>
+        <option value="Campground">Campground</option>
+        <option value="Cardealer">Car Dealer</option>
+        <option value="Carrental">Car Rental</option>
+        <option value="Carrepair">Car Repair</option>
+        <option value="Carwash">Car Wash</option>
+        <option value="Casino">Casino</option>
+        <option value="Church">Church</option>
+        <option value="Cityhall">City Hall</option>
+        <option value="Clothingstore">Clothing Store</option>
+        <option value="Conveniencestore">Convenience Store</option>
+        <option value="Courthouse">Courthouse</option>
+        <option value="Dentist">Dentist</option>
+        <option value="Departmentstore">Department Store</option>
+        <option value="Doctor">Doctor</option>
+        <option value="Electrician">Electrician</option>
+        <option value="Electronicsstore">Electronics Store</option>
+        <option value="Embassy">Embassy</option>
+        <option value="Firestation">Fire Station</option>
+        <option value="Florist">Florist</option>
+        <option value="Furniturestore">Furniture Store</option>
+        <option value="gasstation">Gas Station</option>
+        <option value="gym">Gym</option>
+        <option value="haircare">Hair Care</option>
+        <option value="hardwarestore">Hardware Store</option>
+        <option value="hindutemple">Hindu Temple</option>
+        <option value="homegoodsstore">Home Goods Store</option>
+        <option value="Hospital">Hospital</option>
+        <option value="insuranceagency">Insurance Agency</option>
+        <option value="jewelrystore">Jewelry Store</option>
+        <option value="laundry">Laundry</option>
+        <option value="lawyer">Lawyer</option>
+        <option value="library">Library</option>
+        <option value="liquorstore">Liquor Store</option>
+        <option value="localgovernmentoffice">Local Government Office</option>
+        <option value="locksmith">Locksmith</option>
+        <option value="lodging">Lodging</option>
+        <option value="mealdelivery">Meal Delivery</option>
+        <option value="mealtakeaway">Meal Takeaway</option>
+        <option value="mosque">Mosque</option>
+        <option value="movierental">Movie Rental</option>
+        <option value="movietheater">Movie Theater</option>
+        <option value="movingcompany">Moving Company</option>
+        <option value="museum">Museum</option>
+        <option value="nightclub">Night Club</option>
+        <option value="painter">Painter</option>
+        <option value="park">Park</option>
+        <option value="parking">Parking</option>
+        <option value="petstore">Pet Store</option>
+        <option value="pharmacy">Pharmacy</option>
+        <option value="physiotherapist">Physiotherapist</option>
+        <!--<option value="placeofworship">Place of Worship</option>-->
+        <option value="plumber">Plumber</option>
+        <option value="police">Police</option>
+        <option value="postoffice">Post Office</option>
+        <option value="realestateagency">Real Estate Agency</option>
+        <option value="Restaurant">Restaurant</option>
+        <option value="roofingcontractor">Roofing Contractor</option>
+        <option value="rvpark">RV Park</option>
+        <option value="shoestore">Shoe Store</option>
+        <option value="shoppingmall">Shopping Mall</option>
+        <option value="spa">Spa</option>
+        <option value="stadium">Stadium</option>
+        <option value="storage">Storage</option>
+        <option value="store">Store</option>
+        <option value="subwaystation">Subway Station</option>
+        <option value="synagogue">Synagogue</option>
+        <option value="taxistand">Taxi Stand</option>
+        <option value="trainstation">Train Station</option>
+        <option value="transitstation">Transit Station</option>
+        <option value="travelagency">Travel Agency</option>
+        <option value="university">University</option>
+        <option value="veterinarycare">Veterinary Care</option>
+        <option value="zoo">Zoo</option>
+        <option value="All...">All Service Places</option>
+      </select>
+      <select name="ranges" required="ranges" style="width:200px;">
+        <option value="">3.Nearby Distance</option>
+        <option value="500">500(M)</option>
+        <option value="1000">1000(M)</option>
+        <option value="1500">1500(M)</option>
+        <option value="2000">2000(M)</option>
+        <option value="2500">2500(M)</option>
+        <option value="5000">5000(M)</option>
+      </select>
+      <input type="submit" value="Search Service" style="" id="button2">
+      </div>
+    </form>
+<div id="map_canvas"></div>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+    $( function() {
+    $( "#inputbox" ).draggable();
+  } );
+</script>
+</body>
+</html>
+

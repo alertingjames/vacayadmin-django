@@ -1,0 +1,226 @@
+<title>Pictures</title>
+<head>
+    {% load staticfiles %}
+    <link rel="shortcut icon" href="/static/vacay/images/vacaylogo.jpg" type="image/jpg">
+</head>
+{% block body %}
+<br>
+<br>
+<br>
+<br>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<meta charset="utf-8">
+<meta content="stuff, to, help, search, engines, not" name="keywords">
+<meta content="What this page is about." name="description">
+<style>
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: white url("/static/vacay/images/beautybackground.jpg") no-repeat center center fixed;
+  background-size: cover;
+}
+
+.desc {
+    padding: 6px;
+    text-align: center;
+}
+
+#myBtn {
+  display: none;
+  position: fixed;
+  bottom: 80px;
+  right: 10px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: red;
+  color: white;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 15px;
+}
+
+#myBtn:hover {
+  background-color: orange;
+}
+
+.dd {
+  border-radius: 5px;
+  max-width:550px;
+  width:auto;
+  margin:auto;
+  background-image: url("/static/vacay/images/beautybackground.jpg");
+  background-size:cover;
+  overflow: hidden;
+  box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.2);
+}
+.dd:hover {
+  background-image: url("/static/vacay/images/beautybackg.jpg");
+  background-size:cover;
+}
+
+.contentform {
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-bottom:5px;
+}
+
+</style>
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../lib/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+{% if object %}
+<div style="width:100%; height:100%;">
+    {% if object.imageA != 'None' and object.imageA %}
+    <div class="dd">
+        <div class="contentform">
+            {% if object.descA != 'None' and object.descA %}
+    	        <h2 style="color: white; font-family: 'Satisfy', Verdana; font-size: 100%;">{{object.descA}}</h2>
+            {% endif %}
+            <img src="{{object.imageA}}" style="width:530px; height:auto;">
+        </div>
+    </div>
+    <br>
+    {% endif %}
+    {% if object.imageB and object.imageB != 'None' %}
+    <div class="dd">
+        <div class="contentform">
+            {% if object.descB != 'None' and object.descB %}
+    	        <h2 style="color: white; font-family: 'Satisfy', Verdana; font-size: 100%;">{{object.descB}}</h2>
+            {% endif %}
+            <img src="{{object.imageB}}" style="width:530px; height:auto;">
+        </div>
+    </div>
+    <br>
+    {% endif %}
+    {% if object.imageC and object.imageC != 'None' %}
+    <div class="dd">
+        <div class="contentform">
+            {% if object.descC != 'None' and object.descC %}
+    	        <h2 style="color: white; font-family: 'Satisfy', Verdana; font-size: 100%;">{{object.descC}}</h2>
+            {% endif %}
+            <img src="{{object.imageC}}" style="width:530px; height:auto;">
+        </div>
+    </div>
+    <br>
+    {% endif %}
+    {% if object.imageD and object.imageD != 'None' %}
+    <div class="dd">
+        <div class="contentform">
+            {% if object.descD != 'None' and object.descD %}
+    	        <h2 style="color: white; font-family: 'Satisfy', Verdana; font-size: 100%;">{{object.descD}}</h2>
+            {% endif %}
+            <img src="{{object.imageD}}" style="width:530px; height:auto;">
+        </div>
+    </div>
+    <br>
+    {% endif %}
+    {% if object.imageE and object.imageE != 'None' %}
+    <div class="dd">
+        <div class="contentform">
+            {% if object.descE != 'None' and object.descE %}
+    	        <h2 style="color: white; font-family: 'Satisfy', Verdana; font-size: 100%;">{{object.descE}}</h2>
+            {% endif %}
+            <img src="{{object.imageE}}" style="width:530px; height:auto;">
+        </div>
+    </div>
+    <br>
+    {% endif %}
+    {% if object.imageF and object.imageF != 'None' %}
+    <div class="dd">
+        <div class="contentform">
+            {% if object.descF != 'None' and object.descF %}
+    	        <h2 style="color: white; font-family: 'Satisfy', Verdana; font-size: 100%;">{{object.descF}}</h2>
+            {% endif %}
+            <img src="{{object.imageF}}" style="width:530px; height:auto;">
+        </div>
+    </div>
+    <br>
+    {% endif %}
+</div>
+
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+    <script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        document.getElementById("myBtn").style.display = "block";                         // Top button display none;
+    } else {
+        document.getElementById("myBtn").style.display = "none";
+    }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+}
+</script>
+
+{%else %}
+        <center>
+            <br>
+            <br>
+            <br>
+            <br><br>
+            <h3 class="my_items col-sm-offset-1" style="color:red; margin: 30px;">No Pictures...</h3></center>
+
+{% endif %}
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

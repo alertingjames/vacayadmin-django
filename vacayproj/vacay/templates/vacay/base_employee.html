@@ -1,0 +1,173 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}VaCay{% endblock %}</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Satisfy' rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="{% static 'vacay/style.css' %}"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <link rel="shortcut icon" href="/static/vacay/images/vacaylogo.jpg" type="image/jpg">
+
+    <!-- add styles -->
+    <link href="/static/vacay/css/main.css" rel="stylesheet" type="text/css" />
+    <link href="/static/vacay/css/jquery.Jcrop.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- add scripts -->
+    <script src="/static/vacay/js/jquery.min.js"></script>
+    <script src="/static/vacay/js/jquery.Jcrop.min.js"></script>
+
+    <style>
+
+html, body{
+   background: white url("/static/vacay/images/loginbackg2.jpg") no-repeat center center fixed;
+   background-size:cover;
+}
+#myBtn {
+  display: none;
+  position: fixed;
+  bottom: 40px;
+  right: 30px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: red;
+  color: white;
+  cursor: pointer;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+#myBtn:hover {
+  background-color: orange;
+}
+#advanced{
+    width:300px;
+    background-color:#000000;
+}
+#advanced1{
+    width:200px;
+    background-color:#000000;
+}
+.menu{
+    margin-left:10px;
+}
+</style>
+
+</head>
+<body>
+    <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topNavBar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+        </div>
+
+        <div class="collapse navbar-collapse" id="topNavBar">
+            <ul class="nav navbar-nav">
+                <li class=""style="margin-right:50px;">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                        <h4><span class="glyphicon glyphicon-list" aria-hidden="true"></span>&nbsp; MENU</h4>
+                    </a>
+                    <ul class="dropdown-menu" role="menu" id="advanced1">
+                        <li class="menu"><h4><a href="/vacay/employees/2/"><span class="glyphicon glyphicon-user" style="margin-right:10px;"></span>Employees</a></h4></li>
+                        <li class="menu" style="margin-top:20px;"><h4><a href="/vacay/jobs/3/"><span class="glyphicon glyphicon-briefcase" style="margin-right:10px;"></span>Jobs</a></h4></li>
+                        <li class="menu" style="margin-top:20px;"><h4><a href="/vacay/announcements/3/"><span class="glyphicon glyphicon-bullhorn" style="margin-right:10px;"></span>Announcements</a></h4></li>
+                    </ul>
+
+                </li>
+                <li class=""style="margin-right:50px;">
+                    <a href="{% url 'vacay:get_employees'%}">
+                        <h4 style=""><span class="glyphicon glyphicon-user" aria-hidden="true" ></span>&nbsp; Employees</h4>
+                    </a>
+                </li>
+                <li class=""style="margin-right:20px;">
+                    <a href="{% url 'vacay:add_employee'%}">
+                        <h4><span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp; Add Employee</h4>
+                    </a>
+                </li>
+                <li class="" style="margin-right:50px;">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                        <h4><span class="glyphicon glyphicon-file" aria-hidden="true"></span>&nbsp; From File</h4>
+                    </a>
+                    <ul class="dropdown-menu" role="menu" id="advanced">
+                        <li class="menu"><h4><a href="{% url 'export_xlsx_employee' %}"><span class="glyphicon glyphicon-download" style="margin-right:10px;"></span>1. Download an xlsx-Template</a></h4></li>
+                        <li class="menu" style="margin-top:20px;"><h4><a href="{% url 'import_view_employee' %}"><span class="glyphicon glyphicon-open-file" style="margin-right:10px;"></span>2. Load from the xlsx-Template</a></h4></li>
+                    </ul>
+
+                </li>
+
+            </ul>
+
+             <form class="navbar-form navbar-left" role="search" method="POST" action="{% url 'vacay:search_employee' %}">
+                {% csrf_token %}
+                <h4><div class="form-group">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="q" value="" placeholder="Type the item name...">
+                        <span class="input-group-btn">
+                            <button type="submit" class="btn btn-success">Search</button>
+                        </span>
+                    </div>
+                </div></h4>
+            </form>
+
+
+            <ul class="nav navbar-nav navbar-right">
+
+                <li class="" style="margin-right:50px;">
+                    <a href="/employeewatercoolers">
+                        <h4><span class="glyphicon glyphicon-leaf" aria-hidden="true"></span>&nbsp; Watercoolers</h4>
+                    </a>
+                </li>
+
+                <li class="" style="margin-right:150px;">
+                    <a href="/tomessageoptions">
+                        <h4><span class="glyphicon glyphicon-comment" aria-hidden="true"></span>&nbsp; Message To Group</h4>
+                    </a>
+                </li>
+
+                <li class="">
+                    <a href="{% url 'logout'%}">
+                        <h4><span class="glyphicon glyphicon-off" aria-hidden="true"></span>&nbsp; Logout</h4>
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+    </nav>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+    <script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        document.getElementById("myBtn").style.display = "block";
+    } else {
+        document.getElementById("myBtn").style.display = "none";
+    }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+}
+</script>
+
+{% block body %}
+    {% endblock %}
+
+
+</body>
+</html>
+

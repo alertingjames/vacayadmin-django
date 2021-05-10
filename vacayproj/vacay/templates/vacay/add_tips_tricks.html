@@ -1,0 +1,1046 @@
+{% extends 'vacay/base_tipstricks.html' %}
+{% block title %}Add Tips & Tricks{% endblock %}
+{% block body %}
+
+<br>
+<br>
+<br>
+<style>
+
+html, body{
+  background: url("/static/vacay/images/tipstricksbackground.jpg") no-repeat center center fixed;
+  background-size:cover;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.desc {
+    padding: 15px;
+    text-align: center;
+}
+
+.header {
+  background-color: #327a81;
+  color: white;
+  font-size: 1.5em;
+  padding: 1rem;
+  text-align: center;
+  text-transform: uppercase;
+  border: 1px solid white;
+}
+
+img {
+  border-radius: 50%;
+  height: 80px;
+  width: 80px;
+}
+
+.manage {
+  border-radius: 10%;
+}
+
+.table-users {
+  border: 1px solid #327a81;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.1);
+  width: 100%;
+  background-color: white;
+  overflow-x:auto;
+}
+
+.table>tbody>tr>td{
+    vertical-align: middle;
+    horizontal-align: middle;
+}
+
+table td, table th {
+  color: #2b686e;
+  padding: 10px;
+  border: 1px solid white;
+  text-align: center;
+  vertical-align: middle;
+}
+table td {
+  text-align: center;
+  vertical-align: middle;
+}
+table td:last-child {
+  font-size: 0.95em;
+  line-height: 1.4;
+  text-align: center;
+}
+table th {
+  background-color: #daeff1;
+  font-weight: 300;
+  text-align: center;
+  vertical-align: middle;
+}
+table tr:nth-child(2n) {
+  background-color: white;
+  border: 1px solid #327a81;
+}
+table tr:nth-child(2n+1) {
+  background-color: #edf7f8;
+  border: 1px solid white;
+}
+#manage-menu{
+    -webkit-padding-start: 0px;
+    -webkit-margin-before: 0px;
+    -webkit-margin-after: 0px;
+    margin-top: 0px;
+    margin-right: auto;
+    margin-bottom: 0px;
+    margin-left: auto;
+    width:40px;
+    background-color:#7be5f8;
+    position: relative; /* <-- Added */
+    z-index: 1; /* <-- Added */
+}
+
+.info p {
+  text-align:center;
+  color: #999;
+  text-transform:none;
+  font-weight:600;
+  font-size:15px;
+  margin-top:2px
+}
+
+.info i {
+  color:#F6AA93;
+}
+form h1 {
+  font-size: 21px;
+  background: #327a81 none repeat scroll 0% 0%;
+  color: rgb(255, 255, 255);
+  padding: 19px 22px;
+  border-radius: 5px 5px 0px 0px;
+  margin: auto;
+  text-shadow: none;
+  text-align:left
+}
+
+#sub {
+  font-size: 21px;
+  background: #327a81 none repeat scroll 0% 0%;
+  color: rgb(255, 255, 255);
+  padding: 19px 22px;
+  border-radius: 5px 5px 0px 0px;
+  margin: auto;
+  text-shadow: none;
+  text-align:left
+}
+
+#edit {
+  border-radius: 5px;
+  max-width:1000px;
+  width:100%;
+  margin: 2% auto;
+  background:linear-gradient(0deg,rgba(100,50,250,0.3),rgba(50,100,250,0.3));
+  opacity:0.8;
+  overflow: hidden;
+  box-shadow: 25px 25px 0 rgba(0, 0, 0, 0.2);
+}
+
+#edit:hover {
+  background:linear-gradient(0deg,rgba(200,50,150,0.3),rgba(0,100,150,0.3)), url("/static/vacay/images/tipstricksbackground3.jpg") no-repeat center center fixed;
+  background-size:cover;
+}
+
+#edit2 {
+  border-radius: 5px;
+  max-width:1000px;
+  width:100%;
+  margin: 3% auto;
+  overflow: hidden;
+  background:linear-gradient(0deg,rgba(200,50,150,0.3),rgba(0,100,150,0.3)), url("/static/vacay/images/imageportion2.jpg") no-repeat center center fixed;
+  background-size:cover;
+  box-shadow: 25px 25px 0 rgba(0, 0, 0, 0.2);
+}
+
+#edit2:hover {
+  background:linear-gradient(0deg,rgba(200,50,150,0.3),rgba(0,100,150,0.3)), url("/static/vacay/images/imageportion.jpg") no-repeat center center fixed;
+  background-size:cover;
+}
+
+#typeframe {
+    display:inline-block;
+    padding:15px;
+    margin-left:30px;
+    margin-top:10px;
+    border: 2px solid #666;
+    border-color: #EEE #CCC #CCC #EEE;
+    border-radius:8px;
+    background-color:#FF00FF;
+    opacity:0.8;
+}
+
+#typeframe:hover {
+    background:#EE00EE;
+}
+
+p span {
+  color: #F00;
+}
+
+p {
+  margin: 0px;
+  font-weight: 600;
+  line-height: 2;
+  color:#fff;
+}
+
+h1 {
+  text-align:center;
+  color: #666;
+  text-shadow: 1px 1px 0px #FFF;
+  margin:50px 0px 0px 0px
+}
+
+input {
+  border-radius: 5px 5px 5px 5px;
+  border: 1px solid #eee;
+  margin-bottom: 15px;
+  width: 93%;
+  height: 42px;
+  float: left;
+  padding: 0px 15px;
+  opacity: 0.8;
+  color:blue;
+}
+
+a {
+  text-decoration:inherit
+}
+
+textarea {
+  border-radius: 5px 5px 5px 5px;
+  border: 1px solid #EEE;
+  margin: 0;
+  width: 95%;
+  height: 350px;
+  float: left;
+  padding: 15px 15px;
+  opacity: 0.8;
+  color:blue;
+}
+
+.form-group {
+  overflow: hidden;
+  clear: both;
+}
+
+.icon-case {
+  width: 35px;
+  float: left;
+  border-radius: 5px 0px 0px 5px;
+  background:#eeeeee;
+  height:42px;
+  position: relative;
+  text-align: center;
+  line-height:40px;
+  padding-top:11px;
+}
+
+i {
+  color:#555;
+}
+
+.contentform {
+  padding: 40px 30px;
+}
+
+.bouton-update{
+  background-color: #845801;
+  color: #FFF;
+  text-align: center;
+  width: 100%;
+  border:0;
+  padding: 17px 25px;
+  border-radius: 0px 0px 5px 5px;
+  cursor: pointer;
+  margin-top: 40px;
+  font-size: 18px;
+}
+
+.leftcontact {
+  width:49.5%;
+  float:left;
+  border-right: 1px dotted #CCC;
+  box-sizing: border-box;
+  padding: 0px 15px 0px 0px;
+}
+
+.rightcontact {
+  width:49.5%;
+  float:right;
+  box-sizing: border-box;
+  padding: 0px 0px 0px 15px;
+}
+
+.validation {
+  display:none;
+  margin: 0 0 10px;
+  font-weight:400;
+  font-size:13px;
+  color: #DE5959;
+}
+
+#sendmessage {
+  border:1px solid #fff;
+  display:none;
+  text-align:center;
+  margin:10px 0;
+  font-weight:600;
+  margin-bottom:30px;
+  background-color: #EBF6E0;
+  color: #5F9025;
+  border: 1px solid #B3DC82;
+  padding: 13px 40px 13px 18px;
+  border-radius: 3px;
+  box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.03);
+}
+
+#sendmessage.show,.show  {
+  display:block;
+}
+
+#draggable-element {
+
+
+}
+
+label.cameraButton {
+  display: inline-block;
+  /* Styles to make it look like a button */
+  padding: 0.5em;
+  border: 2px solid #666;
+  border-color: #EEE #CCC #CCC #EEE;
+  border-radius:8px;
+  font-size:16px;
+  color:white;
+  width:250px;
+  height:45px;
+  text-align:middle;
+  background-color: green;
+}
+
+/* Look like a clicked/depressed button */
+label.cameraButton:active {
+  border-color: #CCC #EEE #EEE #CCC;
+}
+
+/* This is the part that actually hides the 'Choose file' text box for camera inputs */
+label.cameraButton input[accept*="video"] {
+  display: none;
+}
+
+iframe{
+    background-image: url("/static/vacay/images/youtubebackg.png");
+    background-size:cover;
+}
+video{
+    background-image: url("/static/vacay/images/videobackg.jpg");
+    background-size:cover;
+}
+
+.checkbox {
+    position: relative;
+    display: block;
+    width: auto;
+    color:white;
+}
+
+input[type="checkbox"] {
+    width: auto;
+    opacity: 0.00000001;
+    position: absolute;
+    left: 0;
+    margin-left: -20px;
+}
+.helper {
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    cursor: pointer;
+    display: block;
+    font-size: 16px;
+    user-select: none;
+    color: #ffffff;
+}
+.helper:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin: 4px;
+    width: 22px;
+    height: 22px;
+    transition: transform 0.28s ease;
+    border-radius: 3px;
+    border: 2px solid #ffffff;
+}
+.helper:after {
+  content: '';
+    display: block;
+    width: 10px;
+    height: 5px;
+    border-bottom: 2px solid #ffffff;
+    border-left: 2px solid #ffffff;
+    -webkit-transform: rotate(-45deg) scale(0);
+    -moz-transform: rotate(-45deg) scale(0);
+    -ms-transform: rotate(-45deg) scale(0);
+    transform: rotate(-45deg) scale(0);
+    position: absolute;
+    top: 12px;
+    left: 10px;
+}
+input[type="checkbox"]:checked ~ .helper::before {
+    color: #ffffff;
+}
+
+input[type="checkbox"]:checked ~ .helper::after {
+    -webkit-transform: rotate(-45deg) scale(1);
+    -moz-transform: rotate(-45deg) scale(1);
+    -ms-transform: rotate(-45deg) scale(1);
+    transform: rotate(-45deg) scale(1);
+}
+
+.checkbox label {
+    min-height: 24px;
+    padding-left: 35px;
+    margin-bottom: 0;
+    font-weight: normal;
+    cursor: pointer;
+    vertical-align: sub;
+}
+input[type="checkbox"]:focus + label::before {
+    outline: rgb(59, 153, 252) auto 5px;
+}
+
+</style>
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../lib/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+  <form id="edit" action="{%url 'vacay:add_tiptrick_process'%}" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+	    <h1 style="font-family: Verdana, Arial, Helvetica, sans-serif;">Add Tips & Tricks</h1>
+
+    <div class="contentform">
+    	<div id="sendmessage"> This profile has been updated successfully!</div>
+        <div class="leftcontact">
+
+            <p>Tips & Tricks Picture <span>*</span></p>
+      <div class="" style="margin-bottom:25px;">
+          <img id="logo" src="/static/vacay/images/tipstricksicon.png" style="width:auto; height:auto; max-width:50%; max-height:60px;
+                margin-bottom:10px; margin-top:5px; border-radius: 10%; margin-left:5%; z-index:100; display:none;">
+          <center><img src="/static/vacay/images/tipstricksicon.png" style="width:auto; height:auto; max-width:100%; max-height:160px; margin-bottom:20px; border-radius: 10%;" id="output"><br>
+          <input required id="b64" style="display:none;" type="text" name="b64" value=""/>
+
+          <label class="cameraButton" style="text-align:center;">Select Picture File
+              <input type="file" name="photo" id="picture" accept="image/*" style="display:none;"/>
+          </label>
+              </center>
+            <label onclick="openMultiplePortion()" style="float:right; color:white; font-size:16px; margin-right:10%; text-decoration:underline; display:none;">Select more ...</label>
+          <script>
+            function readFile() {
+
+			    if (this.files && this.files[0]) {
+
+					var FR= new FileReader();
+
+					FR.addEventListener("load", function(e) {
+ 							document.getElementById("output").src       = e.target.result;
+ 							document.getElementById("b64").value = e.target.result;
+ 							document.getElementById("b64").style.visibility = "hidden";
+					});
+
+					FR.readAsDataURL( this.files[0] );
+
+					document.getElementById("logo").style.display = "block";
+
+					ImageTools.resize(this.files[0], {
+   							width: 200, // maximum width
+   							height: 200 // maximum height
+						}, function(blob, didItResize) {
+   							// didItResize will be true if it managed to resize it, otherwise false (and will return the original file as 'blob')
+   							document.getElementById('output').src = window.URL.createObjectURL(blob);
+   							// you can also now upload this blob using an XHR.
+					});
+			    }
+
+              }
+              document.getElementById("b64").style.visibility = "hidden";
+              document.getElementById("picture").addEventListener("change", readFile);
+          </script>
+      </div>
+
+            <div class="form-group">
+			        <p>Tips & Tricks Title <span>*</span></p>
+			        <!--<span class="icon-case"><i class="fa fa-male"></i></span>-->
+				        <input type="text" name="title" data-rule="required" data-msg="" required id="title" value=""/>
+                <div class="validation"></div>
+            </div>
+
+            <div class="form-group">
+            <p>Audience <span>*</span></p>
+            <!--<span class="icon-case"><i class="fa fa-user"></i></span>-->
+				<input type="text" name="audience" data-rule="required" data-msg="" required id="audience" value=""/>
+                <div class="validation"></div>
+			</div>
+
+            <div class="form-group">
+			<p>Subject <span>*</span></p>
+			<!--<span class="icon-case"><i class="fa fa-home"></i></span>-->
+                <input type="text" name="subject" data-rule="required" data-msg="" required id="subject" value=""/>
+                <div class="validation"></div>
+			</div>
+
+            <div class="form-group">
+			<p>Call of Action <span>*</span></p>
+			<!--<span class="icon-case"><i class="fa fa-home"></i></span>-->
+                <input type="text" name="callofaction" data-rule="required" data-msg="" required id="callofaction" value=""/>
+                <div class="validation"></div>
+			</div>
+            <div class="form-group">
+			<p>Message Owner's E-mail <span>*</span></p>
+			<!--<span class="icon-case"><i class="fa fa-home"></i></span>-->
+                <input type="email" name="owneremail" data-rule="required" data-msg="" required id="owneremail" value=""/>
+                <div class="validation"></div>
+			</div>
+
+            <div class="form-group" style="width:100%;;">
+                 <p>YouTube Video <span>(Optional)</span></p>
+                 <center>
+                    <iframe id="videoresult1" autobuffer  width="250" style="margin-bottom:5px;" src="" frameborder="0" allowfullscreen >
+                    </iframe>
+                 </center>
+                 <div class="form-group" style="width:45%; float:left;">
+                    <p>Video ID <span>*</span></p>
+                    <input type="text" name="youtubeurl" id="youtubeurl" value=""/>
+                    <div class="validation"></div>
+                 </div>
+                 <div style="width:45%; float:right;">
+                    <input id="play" type="button" style="border-radius: 0px 30px 8px 30px; height:45px; background:red; background:blue; font-style:bold; font-weight:700;
+                       color:white; font-size:16px; padding: 0.5em; border: 2px solid #666;border-color: #EEE #CCC #CCC #EEE;" value="PLAY"/>
+                </div>
+                <script>
+
+				</script>
+
+            </div>
+
+	</div>
+
+        <input type="hidden" id="afree" name="afree">
+        <input type="hidden" id="bpaid" name="bpaid">
+        <input type="hidden" id="fr" name="fr">
+
+	<div class="rightcontact">
+
+        <div class="form-group">
+			<p>Type of Tips & Tricks <span>*</span></p>
+			<!--<span class="icon-case"><i class="fa fa-home"></i></span>-->
+            <div id="typeframe">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="adminfree" value="adminfree" id="adminfree" onchange="checkevent();">
+                        <i class="helper"></i>Admin's (Free)
+                    </label>
+                </div>
+                <br>
+                <div class="checkbox" style="margin-top:0;">
+                    <label>
+                        <input type="checkbox" name="buypaid" value="buypaid" id="buypaid" onchange="checkevent2();">
+                        <i class="helper"></i>Buy (Paid)
+                    </label>
+                </div><br>
+                <div class="checkbox" style="margin-top:0;">
+                    <label>
+                        <input type="checkbox" name="free" value="free" id="free" onchange="checkevent3();">
+                        <i class="helper"></i>Free
+                    </label>
+                </div>
+            </div>
+            <div class="validation"></div>
+        </div>
+
+        <p>Video file <span>(Optional)</span></p>
+        <center>
+             <div class="form-group" style="width:auto; margin-bottom:20px;">
+                    <video id="videoresult" autobuffer  controls width="250" autoplay loop style="margin-bottom:5px;">
+                        <source src="" id="videohere"/>
+                    </video>
+				<div style="width:100%; margin-top:10px;">
+                    <label class="cameraButton">Select Video File
+                        <input type="file" name="video" value="http://lorempixel.com/100/100/people/9" id="videofile" accept="video/*"/>
+                    </label>
+                </div>
+
+                 <label onclick="window.location='http://easyhtml5video.com/easyhtml5video-free-setup.zip';"
+                   style="color:white; font-size:16px; text-decoration:underline; margin-bottom:15px;">You can convert .mov video to .webm for web & mobile</label>
+
+                <script>
+                    $(document).on("change", "#videofile", function(evt) {
+                        var $source = $('#videohere');
+                        $source[0].src = URL.createObjectURL(this.files[0]);
+                        $source.parent()[0].load();
+                    });
+				</script>
+
+            </div>
+                </center>
+
+        <div class="form-group">
+			<p>Create a survey for this tips & tricks in Google Forms<span>*</span></p>
+			<!--<span class="icon-case"><i class="fa fa-calendar"></i></span>-->
+                <input type="button" value="GOOGLE FORMS"
+                       style="background:#5817de; opacity:1; font-size:20px; font-weight:600; color:white;" onclick="window.location='https://docs.google.com/forms/u/0/';"/>
+                <div class="validation"></div>
+        </div>
+        <div class="form-group">
+			<p>Copy and paste long survey link from Google Forms<span>*</span></p>
+			<!--<span class="icon-case"><i class="fa fa-plane"></i></span>-->
+                <input type="text" name="survey" id="survey" data-rule="required" data-msg="" value="" placeholder="Survey long link"/>
+                <div class="validation"></div>
+        </div>
+
+        <div class="form-group">
+			<p>Description <span>*</span></p>
+			<!--<span class="icon-case"><i class="fa fa-comments-o"></i></span>-->
+            <textarea name="description"  rows="100" data-rule="required" data-msg="" required id="description"></textarea>
+            <div class="validation"></div>
+			</div>
+	</div>
+	</div>
+
+      <input type="hidden" name="b64a" id="b64aa">
+      <input type="hidden" name="b64b" id="b64bb">
+      <input type="hidden" name="b64c" id="b64cc">
+      <input type="hidden" name="b64d" id="b64dd">
+      <input type="hidden" name="b64e" id="b64ee">
+      <input type="hidden" name="b64f" id="b64ff">
+      <input type="hidden" name="desca" id="descaa">
+      <input type="hidden" name="descb" id="descbb">
+      <input type="hidden" name="descc" id="desccc">
+      <input type="hidden" name="descd" id="descdd">
+      <input type="hidden" name="desce" id="descee">
+      <input type="hidden" name="descf" id="descff">
+
+<button type="submit" class="bouton-update">SUBMIT</button>
+
+</form>
+
+<div id="edit2" style="display:none;">
+      {% csrf_token %}
+      <h1 id="sub">Add Multiple Pictures (Optional)</h1>
+
+      <div class="contentform">
+
+        <div class="leftcontact">
+
+            <p>Tips & Tricks Picture <span>(A)</span></p>
+            <div class="" style="margin-bottom:25px;">
+                <center>
+                    <img src="" style="width:auto; height:auto; max-width:80%; max-height:200px; margin-bottom:20px; margin-top:10px; border-radius: 10%;" id="outputa">
+                    <input required id="b64a" style="display:none;" type="text" name="b64" value=""/>
+                    <center><input type="text" id="desca" placeholder="Write something..." style="text-align:center; width:95%; margin-bottom:20px; display:none;"></center><br>
+                    <label class="cameraButton" style="text-align:center;">Select Picture A
+                        <input type="file" name="photo" id="picturea" accept="image/*" style="display:none;"/>
+                    </label>
+                </center>
+
+                <script>
+                    function readFileA() {
+
+			            if (this.files && this.files[0]) {
+
+					        var FR= new FileReader();
+
+					        document.getElementById("desca").style.display = "block";
+
+					        FR.addEventListener("load", function(e) {
+ 							    document.getElementById("outputa").src       = e.target.result;
+ 							    document.getElementById("b64a").value = e.target.result;
+ 							    document.getElementById("b64a").style.visibility = "hidden";
+					        });
+
+					        FR.readAsDataURL( this.files[0] );
+
+					        ImageTools.resize(this.files[0], {
+   							    width: 200, // maximum width
+   							    height: 200 // maximum height
+						    }, function(blob, didItResize) {
+   							    // didItResize will be true if it managed to resize it, otherwise false (and will return the original file as 'blob')
+   							    document.getElementById('outputa').src = window.URL.createObjectURL(blob);
+   							    // you can also now upload this blob using an XHR.
+					        });
+			            }
+
+                    }
+                    document.getElementById("b64a").style.visibility = "hidden";
+                    document.getElementById("picturea").addEventListener("change", readFileA);
+                </script>
+            </div>
+
+            <p>Tips & Tricks Picture <span>(B)</span></p>
+            <div class="" style="margin-bottom:25px;">
+                <center>
+                    <img src="" style="width:auto; height:auto; max-width:80%; max-height:200px; margin-bottom:20px; margin-top:10px; border-radius: 10%;" id="outputb">
+                    <input required id="b64b" style="display:none;" type="text" name="b64" value=""/>
+                    <center><input type="text" id="descb" placeholder="Write something..." style="text-align:center; width:95%; margin-bottom:20px; display:none;"></center><br>
+                    <label class="cameraButton" style="text-align:center;">Select Picture B
+                        <input type="file" name="photo" id="pictureb" accept="image/*" style="display:none;"/>
+                    </label>
+                </center>
+
+                <script>
+                    function readFileB() {
+
+			            if (this.files && this.files[0]) {
+
+					        var FR= new FileReader();
+
+					        document.getElementById("descb").style.display = "block";
+
+					        FR.addEventListener("load", function(e) {
+ 							    document.getElementById("outputb").src       = e.target.result;
+ 							    document.getElementById("b64b").value = e.target.result;
+ 							    document.getElementById("b64b").style.visibility = "hidden";
+					        });
+
+					        FR.readAsDataURL( this.files[0] );
+
+					        ImageTools.resize(this.files[0], {
+   							    width: 200, // maximum width
+   							    height: 200 // maximum height
+						    }, function(blob, didItResize) {
+   							    // didItResize will be true if it managed to resize it, otherwise false (and will return the original file as 'blob')
+   							    document.getElementById('outputb').src = window.URL.createObjectURL(blob);
+   							    // you can also now upload this blob using an XHR.
+					        });
+			            }
+
+                    }
+                    document.getElementById("b64b").style.visibility = "hidden";
+                    document.getElementById("pictureb").addEventListener("change", readFileB);
+                </script>
+            </div>
+
+            <p>Tips & Tricks Picture <span>(C)</span></p>
+            <div class="" style="margin-bottom:25px;">
+                <center>
+                    <img src="" style="width:auto; height:auto; max-width:80%; max-height:200px; margin-bottom:20px; margin-top:10px; border-radius: 10%;" id="outputc">
+                    <input required id="b64c" style="display:none;" type="text" name="b64" value=""/>
+                    <center><input type="text" id="descc" placeholder="Write something..." style="text-align:center; width:95%; margin-bottom:20px; display:none;"></center><br>
+                    <label class="cameraButton" style="text-align:center;">Select Picture C
+                        <input type="file" name="photo" id="picturec" accept="image/*" style="display:none;"/>
+                    </label>
+                </center>
+
+                <script>
+                    function readFileC() {
+
+			            if (this.files && this.files[0]) {
+
+					        var FR= new FileReader();
+
+					        document.getElementById("descc").style.display = "block";
+
+					        FR.addEventListener("load", function(e) {
+ 							    document.getElementById("outputc").src       = e.target.result;
+ 							    document.getElementById("b64c").value = e.target.result;
+ 							    document.getElementById("b64c").style.visibility = "hidden";
+					        });
+
+					        FR.readAsDataURL( this.files[0] );
+
+					        ImageTools.resize(this.files[0], {
+   							    width: 200, // maximum width
+   							    height: 200 // maximum height
+						    }, function(blob, didItResize) {
+   							    // didItResize will be true if it managed to resize it, otherwise false (and will return the original file as 'blob')
+   							    document.getElementById('outputc').src = window.URL.createObjectURL(blob);
+   							    // you can also now upload this blob using an XHR.
+					        });
+			            }
+
+                    }
+                    document.getElementById("b64c").style.visibility = "hidden";
+                    document.getElementById("picturec").addEventListener("change", readFileC);
+                </script>
+            </div>
+
+        </div>
+
+        <div class="rightcontact">
+
+            <p>Tips & Tricks Picture <span>(D)</span></p>
+            <div class="" style="margin-bottom:25px;">
+                <center>
+                    <img src="" style="width:auto; height:auto; max-width:80%; max-height:200px; margin-bottom:20px; margin-top:10px; border-radius: 10%;" id="outputd">
+                    <input required id="b64d" style="display:none;" type="text" name="b64" value=""/>
+                    <center><input type="text" id="descd" placeholder="Write something..." style="text-align:center; width:95%; margin-bottom:20px; display:none;"></center><br>
+                    <label class="cameraButton" style="text-align:center;">Select Picture D
+                        <input type="file" name="photo" id="pictured" accept="image/*" style="display:none;"/>
+                    </label>
+                </center>
+
+                <script>
+                    function readFileD() {
+
+			            if (this.files && this.files[0]) {
+
+					        var FR= new FileReader();
+
+					        document.getElementById("descd").style.display = "block";
+
+					        FR.addEventListener("load", function(e) {
+ 							    document.getElementById("outputd").src       = e.target.result;
+ 							    document.getElementById("b64d").value = e.target.result;
+ 							    document.getElementById("b64d").style.visibility = "hidden";
+					        });
+
+					        FR.readAsDataURL( this.files[0] );
+
+					        ImageTools.resize(this.files[0], {
+   							    width: 200, // maximum width
+   							    height: 200 // maximum height
+						    }, function(blob, didItResize) {
+   							    // didItResize will be true if it managed to resize it, otherwise false (and will return the original file as 'blob')
+   							    document.getElementById('outputd').src = window.URL.createObjectURL(blob);
+   							    // you can also now upload this blob using an XHR.
+					        });
+			            }
+
+                    }
+                    document.getElementById("b64d").style.visibility = "hidden";
+                    document.getElementById("pictured").addEventListener("change", readFileD);
+                </script>
+            </div>
+
+            <p>Tips & Tricks Picture <span>(E)</span></p>
+            <div class="" style="margin-bottom:25px;">
+                <center>
+                    <img src="" style="width:auto; height:auto; max-width:80%; max-height:200px; margin-bottom:20px; margin-top:10px; border-radius: 10%;" id="outpute">
+                    <input required id="b64e" style="display:none;" type="text" name="b64" value=""/>
+                    <center><input type="text" id="desce" placeholder="Write something..." style="text-align:center; width:95%; margin-bottom:20px; display:none;"></center><br>
+                    <label class="cameraButton" style="text-align:center;">Select Picture E
+                        <input type="file" name="photo" id="picturee" accept="image/*" style="display:none;"/>
+                    </label>
+                </center>
+
+                <script>
+                    function readFileE() {
+
+			            if (this.files && this.files[0]) {
+
+					        var FR= new FileReader();
+
+					        document.getElementById("desce").style.display = "block";
+
+					        FR.addEventListener("load", function(e) {
+ 							    document.getElementById("outpute").src       = e.target.result;
+ 							    document.getElementById("b64e").value = e.target.result;
+ 							    document.getElementById("b64e").style.visibility = "hidden";
+					        });
+
+					        FR.readAsDataURL( this.files[0] );
+
+					        ImageTools.resize(this.files[0], {
+   							    width: 200, // maximum width
+   							    height: 200 // maximum height
+						    }, function(blob, didItResize) {
+   							    // didItResize will be true if it managed to resize it, otherwise false (and will return the original file as 'blob')
+   							    document.getElementById('outpute').src = window.URL.createObjectURL(blob);
+   							    // you can also now upload this blob using an XHR.
+					        });
+			            }
+
+                    }
+                    document.getElementById("b64e").style.visibility = "hidden";
+                    document.getElementById("picturee").addEventListener("change", readFileE);
+                </script>
+            </div>
+
+            <p>Tips & Tricks Picture <span>(F)</span></p>
+            <div class="" style="margin-bottom:25px;">
+                <center>
+                    <img src="" style="width:auto; height:auto; max-width:80%; max-height:200px; margin-bottom:20px; margin-top:10px; border-radius: 10%;" id="outputf">
+                    <input required id="b64f" style="display:none;" type="text" name="b64" value=""/>
+                    <center><input type="text" id="descf" placeholder="Write something..." style="text-align:center; width:95%; margin-bottom:20px; display:none;"></center><br>
+                    <label class="cameraButton" style="text-align:center;">Select Picture F
+                        <input type="file" name="photo" id="picturef" accept="image/*" style="display:none;"/>
+                    </label>
+                </center>
+
+                <script>
+                    function readFileF() {
+
+			            if (this.files && this.files[0]) {
+
+					        var FR= new FileReader();
+
+					        document.getElementById("descf").style.display = "block";
+
+					        FR.addEventListener("load", function(e) {
+ 							    document.getElementById("outputf").src       = e.target.result;
+ 							    document.getElementById("b64f").value = e.target.result;
+ 							    document.getElementById("b64f").style.visibility = "hidden";
+					        });
+
+					        FR.readAsDataURL( this.files[0] );
+
+					        ImageTools.resize(this.files[0], {
+   							    width: 200, // maximum width
+   							    height: 200 // maximum height
+						    }, function(blob, didItResize) {
+   							    // didItResize will be true if it managed to resize it, otherwise false (and will return the original file as 'blob')
+   							    document.getElementById('outputf').src = window.URL.createObjectURL(blob);
+   							    // you can also now upload this blob using an XHR.
+					        });
+			            }
+
+                    }
+                    document.getElementById("b64f").style.visibility = "hidden";
+                    document.getElementById("picturef").addEventListener("change", readFileF);
+                </script>
+            </div>
+
+        </div>
+    </div>
+
+      <button type="submit" class="bouton-update" onclick="loadPictures()">LOAD</button>
+
+  </div>
+
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+
+$(document).ready(function(){
+   $('#play').click(function(){
+       document.getElementById("videoresult1").src = 'https://www.youtube.com/embed/' + document.getElementById("youtubeurl").value +'?autoplay=1';
+    });
+})
+
+function loadPictures(){
+    document.getElementById("b64aa").value = document.getElementById("b64a").value;
+    document.getElementById("b64bb").value = document.getElementById("b64b").value;
+    document.getElementById("b64cc").value = document.getElementById("b64c").value;
+    document.getElementById("b64dd").value = document.getElementById("b64d").value;
+    document.getElementById("b64ee").value = document.getElementById("b64e").value;
+    document.getElementById("b64ff").value = document.getElementById("b64f").value;
+
+    document.getElementById("descaa").value = document.getElementById("desca").value;
+    document.getElementById("descbb").value = document.getElementById("descb").value;
+    document.getElementById("desccc").value = document.getElementById("descc").value;
+    document.getElementById("descdd").value = document.getElementById("descd").value;
+    document.getElementById("descee").value = document.getElementById("desce").value;
+    document.getElementById("descff").value = document.getElementById("descf").value;
+
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+}
+
+function openMultiplePortion(){
+    window.scrollTo(0, 1000);
+}
+
+$( function() {
+    $( "#edit" ).draggable();
+} );
+</script>
+
+<script>
+var a = document.getElementById("adminfree");
+var b = document.getElementById("buypaid");
+var c = document.getElementById("free");
+
+var aa = document.getElementById("afree");
+var bb = document.getElementById("bpaid");
+var cc = document.getElementById("fr");
+
+function checkevent(){
+    if (a.checked){
+        aa.value = "adminfree" ;
+    }else {
+        aa.value = "" ;
+    }
+}
+
+function checkevent2(){
+    if (b.checked){
+        bb.value = "buypaid" ;
+    }else {
+        bb.value = "" ;
+    }
+}
+
+function checkevent3(){
+    if (c.checked){
+        cc.value = "free" ;
+    }else {
+        cc.value = "" ;
+    }
+}
+</script>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

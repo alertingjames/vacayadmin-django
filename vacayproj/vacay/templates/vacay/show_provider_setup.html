@@ -1,0 +1,258 @@
+{% extends 'vacay/base_provider_setup.html' %}
+{% block title %}Provider Setup{% endblock %}
+{% block body %}
+{% if provider %}
+<br>
+<br>
+<br>
+<style>
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.desc {
+    padding: 15px;
+    text-align: center;
+}
+
+.header {
+  background-image: url("/static/vacay/images/bc3.jpg");
+  background-size:20%,100%;
+  color: white;
+  font-size: 2.5em;
+  font-weight:900;
+  text-shadow: 4px 4px 8px #000000;
+  padding: 1rem;
+  text-align: left;
+  text-transform: uppercase;
+  <!--border: 1px solid white;-->
+}
+
+img {
+  border-radius: 50%;
+  height: 80px;
+  width: auto;
+}
+
+#product-image{
+    border-radius: 5%;
+    height:auto;
+    width: 130px;
+}
+
+.manage {
+  border-radius: 10%;
+}
+
+.table-users {
+  border: 1px solid #327a81;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.1);
+  width: 100%;
+  background-color: white;
+  overflow-x:auto;
+}
+
+.table-users1 {
+  border: 1px solid #ffffff;
+  <!--box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.1);-->
+  width: 100%;
+  background-color: white;
+  overflow-x:auto;
+  position: relative;
+  display:none;
+}
+.table>tbody>tr>td{
+    vertical-align: middle;
+    horizontal-align: middle;
+}
+
+table td, table th {
+  color: #2b686e;
+  padding: 10px;
+  border: 1px solid white;
+  text-align: center;
+  vertical-align: middle;
+}
+table td {
+  text-align: center;
+  vertical-align: middle;
+}
+table td:last-child {
+  font-size: 0.95em;
+  line-height: 1.4;
+  text-align: center;
+}
+table th {
+  background-color: #04a2be;
+  font-weight: 520;
+  color:white;
+  text-align: center;
+  vertical-align: middle;
+}
+table tr:nth-child(2n) {
+  background-color: white;
+  border: 1px solid #327a81;
+}
+table tr:nth-child(2n+1) {
+  background-color: #edf7f8;
+  border: 1px solid white;
+}
+#manage-menu{
+    -webkit-padding-start: 0px;
+    -webkit-margin-before: 0px;
+    -webkit-margin-after: 0px;
+    margin-top: 0px;
+    margin-right: auto;
+    margin-bottom: 0px;
+    margin-left: auto;
+    width:40px;
+    background-color:#000000;
+    position: relative; /* <-- Added */
+    z-index: 100; /* <-- Added */
+}
+
+#myBtn {
+  display: none;
+  position: fixed;
+  bottom: 200px;
+  right: 10px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: red;
+  color: white;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 15px;
+}
+
+#myBtn:hover {
+  background-color: orange;
+}
+#admin{display:none;}
+
+</style>
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+<img src="{{admin.adminImageUrl}}" id="admin" style="width:80px; height:80px; border-radius:50%;margin-top:40px;margin-left:10px; z-index:2; position:fixed;" align="top">
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<div class="table-users1" id="header" style="z-index:1; position:relative;" align="top">
+    <div class="header"></div>
+    <table cellspacing="0" class="table table-fit">
+        <tr>
+            <th style="width:5%;">id</th>
+            <th style="width:15%;">Picture</th>
+            <th style="width:12%;">First Name</th>
+            <th style="width:12%;">Last Name</th>
+            <th style="width:12%;">Percent of Service</th>
+            <th style="width:12%;">Salary Amount</th>
+            <th style="width:12%;">Percent of Product Sales</th>
+            <th style="width:10%;">Manage</th>
+        </tr>
+    </table>
+</div>
+
+<div class="table-users" style="margin-top:13px;">
+    <div class="header"><img src="{{admin.adminImageUrl}}" alt="" style="margin-right:30px;margin-left:500px;"/>Provider Setup</div>
+    <table cellspacing="0" class="table table-fit">
+        <tr>
+            <th style="width:5%;">id</th>
+            <th style="width:15%;">Picture</th>
+            <th style="width:12%;">First Name</th>
+            <th style="width:12%;">Last Name</th>
+            <th style="width:12%;">Percent of Service</th>
+            <th style="width:12%;">Salary Amount</th>
+            <th style="width:12%;">Percent of Product Sales</th>
+            <th style="width:10%;">Manage</th>
+        </tr>
+
+        {% for provider in provider %}
+        <tr>
+            <td>{{provider.proid}}</td>
+            <td>
+                <a target="_blank" href="{{provider.proProfileImageUrl}}">
+                    <img src="{{provider.proProfileImageUrl}}" alt=""/>
+                </a>
+            </td>
+            <td>{{provider.proFirstName}}</td>
+            <td>{{provider.proLastName}}</td>
+            <td>{{provider.proServicePercent}}</td>
+            <td>{{provider.proSalary}}</td>
+            <td>{{provider.proProductSalePercent}}</td>
+            <td align="center">
+                <div class="input-group" style="margin-left:70px;">
+                    <a href="/editprovidersetup" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><img src="/static/vacay/images/manage.png" style="width:40px; height:40px;" class="manage"></a>
+	                <ul class="dropdown-menu" role="menu" id="manage-menu">
+	                    <li class="menu"><h4><a href="{% url 'vacay:edit_setup_view' provider.id %}"><span class="glyphicon glyphicon-edit" style="margin-right:15px;margin-left:15px;"></span>Update</a></h4></li>
+	                </ul>
+                </div>
+            </td>
+
+        </tr>
+
+        {% endfor %}
+    </table>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+    $(window).on('scroll', function () {
+
+  var $w = $(window);
+  $('.position-fixed-x').css('left', $w.scrollLeft());
+  $('.table-users1').css('top', $w.scrollTop());
+
+});
+</script>
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        document.getElementById("header").style.display = "block";
+        document.getElementById("myBtn").style.display = "block";
+        document.getElementById("admin").style.display = "block";
+    } else {
+        document.getElementById("header").style.display = "none";
+        document.getElementById("myBtn").style.display = "none";
+        document.getElementById("admin").style.display = "none";
+    }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+}
+</script>
+{%else %}
+        <center>
+            <br>
+            <br>
+            <br>
+            <br><br>
+            <h3 class="my_items col-sm-offset-1" style="color:red; margin: 30px;">No Providers...</h3></center>
+        </center>
+    {% endif %}
+{% endblock %}

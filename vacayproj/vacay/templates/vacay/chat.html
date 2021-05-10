@@ -1,0 +1,437 @@
+{% extends 'vacay/base_chat.html' %}
+{% block title %}Chat with Friend{% endblock %}
+{% block body %}
+
+<br>
+<br>
+<br>
+    <meta charset="UTF-8">
+    <title>Chat with Friend</title>
+    <style>
+        html, body{
+            background: linear-gradient(0deg,rgba(20,150,250,0.5),rgba(0,100,250,0.5)), url("/static/vacay/images/paybackground.jpg") no-repeat center center fixed;
+            background-size:cover;
+        }
+        #edit {
+            border-radius: 5px;
+            max-width:500px;
+            width:auto;
+            height:auto;
+            margin-top: 2%;
+            margin-bottom: auto;
+            margin-left:auto;
+            margin-right:auto;
+            <!--background:linear-gradient(30deg,rgba(200,150,250,0.7),rgba(50,200,250,0.7));-->
+            opacity:0.9;
+            overflow: hidden;
+            <!--box-shadow: 25px 25px 0 rgba(0, 0, 0, 0.2);-->
+        }
+        .contentform {
+            padding: 0px 20px 30px 20px;
+            float:middle;
+            margin-top:22%;
+        }
+        .formcontent {
+            width:100%;
+            float:middle;
+            margin:auto;
+            <!--border-right: 1px dotted #CCC;-->
+            box-sizing: border-box;
+            padding: 0px 0px 0px 0px;
+        }
+        #chat_log {
+            border-radius: 5px;
+            border: 1px solid #EEE;
+            margin: 0;
+            width: 100%;
+            height: 600px;
+            float: middle;
+            padding: 15px 15px 15px 15px;
+            opacity: 0.8;
+            color:black;
+            background:linear-gradient(0deg,rgba(250,250,250,0.7),rgba(250,250,250,0.7)),url("/static/vacay/images/chatbackground.jpg");
+            background-size:cover;
+            overflow-y:auto;
+        }
+        #chat_log::-webkit-scrollbar {
+            display: none;
+        }
+        #send-form{
+            width:100%;
+        }
+        div#list {
+            width: 100%;
+            height: auto;
+        }
+
+        div#list > div > div {
+            width: auto;
+            height: auto;
+            padding: 8px 15px 8px 15px;
+            border-radius:15px;
+            margin-bottom: 5px;
+            color: black;
+            word-wrap: break-word;
+            white-space: pre-line;
+            word-break: break-all;
+        }
+        #photo {
+            display: none;
+            top:15%;
+        }
+        .attach-button {
+            width:50%;
+            padding:2px;
+        }
+        label.button {
+            background:green;
+            padding:10px;
+            color:white;
+            text-align:center;
+            font-size:16px;
+            font-weight:600;
+            width:100%;
+            border: 1.5px solid #666;
+            border-color: #EEE #CCC #CCC #EEE;
+            border-radius:5px;
+        }
+        i {
+            margin-right:10px;
+        }
+        /* Look like a clicked/depressed button */
+        label.button:active {
+            border-color: #CCC #EEE #EEE #CCC;
+        }
+
+        /* This is the part that actually hides the 'Choose file' text box for camera inputs */
+        label.button input[accept*="image"] {
+            display: none;
+        }
+    </style>
+
+<script>
+	history.pushState(null, null, location.href);
+	window.onpopstate = function () {
+        history.go(1);
+    };
+    <!--var msg = new SpeechSynthesisUtterance('Hello World');-->
+    <!--window.speechSynthesis.speak(msg);-->
+</script>
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--<meta name="mobile-web-app-capable" content="yes">-->
+<!--<meta name="apple-mobile-web-app-capable" content="yes">-->
+<link rel="stylesheet" href="../lib/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<!--<script>-->
+  <!--function launchFullScreen(element) {-->
+  <!--if(element.requestFullScreen) {-->
+    <!--element.requestFullScreen();-->
+  <!--} else if(element.mozRequestFullScreen) {-->
+    <!--element.mozRequestFullScreen();-->
+  <!--} else if(element.webkitRequestFullScreen) {-->
+    <!--element.webkitRequestFullScreen();-->
+  <!--}-->
+<!--}-->
+
+<!--// Launch fullscreen for browsers that support it!-->
+<!--launchFullScreen(document.documentElement); // the whole page-->
+<!--</script>-->
+
+<!--<img src="{{user.photo_url}}" id="photo" style="max-width:60px; max-height:60px; width:auto; height:auto; border-radius:50%;-->
+ <!--position:fixed; left:10%; float:middle; transform:translate(-50%, -50%); z-index:100; ">-->
+
+<div id="imageFrame" style="text-align:center; box-shadow: 4px 5px 0 rgba(0, 0, 0, 0.3);
+	position:fixed; left:50%; float:middle; background-color:white; border-radius:10px; padding: 10px;
+	transform:translate(-50%, -50%); width:auto; height:auto; z-index:200; top:350px; display:none;">
+	<img src="" style="width:250px; height:auto; display:none;" id="image_message">
+    <video id="videoresult" autobuffer  controls width="250" autoplay loop style="display:none;">
+        <source src="" id="videohere"/>
+    </video>
+    <br>
+    <button style="width:60%; text-align:center; padding:10px; color:white; background:rgb(26, 117, 255); border-radius:10px; margin-top:20px;" onclick="okay()" >Okay</button>
+</div>
+
+<div id="photo" style="height:auto; position:fixed; left:15%; top:15%; float:middle; transform:translate(-50%, -50%); width:100px; z-index:100;">
+    <img src="{{friend.photo_url}}" style="max-width:60px; max-height:60px; width:auto; height:auto; border-radius:50px;">
+    <div id="st" style="color: red; font-size:18px; padding:3% 3% 3% 3%; min-width:60px; text-align:center; height:auto;
+        border-radius:3px; margin-top:3px; background-color:white; display:none;"></div>
+</div>
+
+<img src="/static/vacay/images/processing.gif" class="glyphicon glyphicon-fire" aria-hidden="true" style="position:fixed; left:50%; float:middle;
+	transform:translate(-50%, -50%); width:80px; height:auto; z-index:100; top:120px; display: none;" id="gif">
+
+    <div id="edit">
+        <div style="width:100%; height:auto; margin-bottom:5%; margin-top:1.5%; margin-left:8%;">
+            <img src="{{friend.photo_url}}" style="max-width:60px; max-height:60px; width:auto; height:auto; border-radius:50px; float:left;">
+            <div style="color:white; font-size:18px; padding:2% 2% 2% 5%; float:left; height:auto;">
+                <div>{{friend.first_name}} {{friend.last_name}}</div>
+                <div id="online" style="margin-top:5px; font-size:12px;"></div>
+            </div>
+        </div>
+        <div class="contentform">
+            <div class="formcontent">
+                <div id="chat_log">
+                    <div id="list" aria-placeholder="No message ..."></div>
+                </div>
+                <div id="send-form" style="width:101%; margin-bottom: 15%; margin-top:5px;">
+                    <input type="hidden" id="sender_name" value="{{me.adminName}}">
+                    <input type="hidden" id="sender_id" value="{{me.id}}">
+                    <input type="hidden" id="sender_email" value="{{me.adminEmail}}">
+                    <input type="hidden" id="sender_photo" value="{{me.adminImageUrl}}">
+                    <input type="hidden" id="friend_name" value="{{friend.first_name}} {{friend.last_name}}">
+                    <!--<input type="hidden" id="user_id" value="{{user.id}}">-->
+                    <input type="hidden" id="friend_email" value="{{friend.email}}">
+                    <input type="hidden" id="type" value="{{friend.email}}">
+                    <input type="hidden" id="lat" value="{% if lat %}{{lat}}{% else %}{% endif %}">
+                    <input type="hidden" id="lng" value="{% if lng %}{{lng}}{% else %}{% endif %}">
+                    <div style="width:99%; margin-bottom:5px; display:none;" id="panel">
+                        <table  style="width:100%;">
+                            <tr>
+                                <td class="attach-button"><label class="button" id="picture-btn"><i class="fa fa-image"></i>Picture
+                                    <input type="file" name="photo" value="http://lorempixel.com/100/100/people/9" id="picture" accept="image/*"/></label>
+                                </td>
+                                <script>
+                                    function readFile() {
+
+			                            if (this.files && this.files[0]) {
+
+					                        var FR= new FileReader();
+
+					                        FR.addEventListener("load", function(e) {
+					                            document.getElementById("imageFrame").style.display = "block";
+					                            document.getElementById("image_message").style.display = "block";
+					                            document.getElementById("videoresult").style.display = "none";
+ 							                    document.getElementById("image_message").src       = e.target.result;
+                                                document.getElementById("type").value = 'picture';
+					                        });
+
+					                        FR.readAsDataURL( this.files[0] );
+
+                                            ImageTools.resize(this.files[0], {
+   							                    width: 200, // maximum width
+   							                    height: 200 // maximum height
+						                    }, function(blob, didItResize) {
+   							                    // didItResize will be true if it managed to resize it, otherwise false (and will return the original file as 'blob')
+   							                    document.getElementById('output').src = window.URL.createObjectURL(blob);
+   							                    // you can also now upload this blob using an XHR.
+					                        });
+			                            }
+
+                                    }
+
+                                    document.getElementById("picture").addEventListener("change", readFile);
+                                </script>
+
+                                <td class="attach-button"><label class="button" id="video-btn"><i class="fa fa-video-camera"></i>Video
+                                    <input type="file" name="video" value="http://lorempixel.com/100/100/people/9" id="videofile" accept="video/*" style="display:none;"/></label>
+                                </td>
+                                <script>
+                                    var file;
+                                    $(document).on("change", "#videofile", function(evt) {
+                                        var $source = $('#videohere');
+                                        $source[0].src = URL.createObjectURL(this.files[0]);
+                                        $source.parent()[0].load();
+                                        file = this.files[0];
+                                        document.getElementById("imageFrame").style.display = "block";
+					                    document.getElementById("image_message").style.display = "none";
+					                    document.getElementById("videoresult").style.display = "block";
+					                    document.getElementById("type").value = 'video';
+                                    });
+				                </script>
+                            </tr>
+                            <tr style="display:none;">
+                                <td class="attach-button"><label class="button" id="location-btn" onclick="chat_map()"><i class="fa fa-location-arrow"></i>Location</label></td>
+                                <td class="attach-button">
+                                                            <!--onclick="open_panel()"-->
+                                    <label class="button" id="audio-btn" onclick="open_panel()"><i class="fa fa-volume-up"></i>Audio
+                                        <!--<input type="file" style="display:none;" accept="audio/*" id="audio">-->
+                                    </label>
+                                </td>
+                                <!--<script>-->
+                                    <!--var file3;-->
+                                    <!--$(document).on("change", "#audio", function(evt) {-->
+                                        <!--file3 = this.files[0];-->
+					                    <!--document.getElementById("type").value = 'file';-->
+					                    <!--uploadFile(file3);-->
+                                    <!--});-->
+				                <!--</script>-->
+                            </tr>
+                        </table>
+                        <center>
+                            <div id="audio-panel" style="display:none;">
+                                <audio controls autoplay></audio>
+    		                    <script type="text/javascript" src="/static/vacay/recorder.js"> </script>
+                                <fieldset style="margin:10px; border:2px solid white;">
+                                    <legend style="color:white; font-size:18px; font-weight:600;">RECORD AUDIO</legend>
+    		                        <input onclick="javascript:startRecording();" type="button" value="start recording" style="border-radius:8px; background:#86592d; color:white; padding:6px 15px;"/>
+    		                        <input onclick="javascript:stopRecording();" type="button" value="stop recording" style="border-radius:8px; background:#86592d; color:white; padding:6px 15px;"/>
+                                </fieldset>
+                            </div>
+
+                            <label class="button" id="file-btn" style="width:99%; height:42px;"><i class="fa fa-folder-open"></i>All Files
+                                    <input type="file" name="allfile" value="http://lorempixel.com/100/100/people/9" id="allfile" style="display:none;"/></label>
+                        </center>
+                                <script>
+                                    var file2;
+                                    $(document).on("change", "#allfile", function(evt) {
+                                        file2 = this.files[0];
+					                    document.getElementById("type").value = 'file';
+					                    uploadFile(file2);
+                                    });
+				                </script>
+                    </div>
+                    <div style="width:100%;">
+                        <img src="/static/vacay/images/attachmentbutton.png" id="attachment-btn" style="height:auto; width:9%; margin:0; float:left; margin-top:2px;" onclick="show_panel()">
+                        <input type="text" required id="message" placeholder="Write something ..." oninput="myFunction()"
+                           style="width:78%; height:42px; border-radius: 5px; padding: 0px 15px; border: 1px solid #eee; color:black; opacity: 0.8; float:left; margin-left:1%;">
+                        <button type="submit" class="send" id="submitBtn" onclick="submitClick()" style="width:10%; height:42px; background-color: green; float:left; margin-left:1%;
+                            color: #FFF; text-align: center; border-radius: 5px; cursor: pointer; font-size: 16px;"><span class="glyphicon glyphicon-send" aria-hidden="true" ></span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyC1e8-93-ia4seBJlMR7_BPt-pxnWGrgNA",
+    databaseURL: "https://vacay-42bcd.firebaseio.com",
+    projectId: "vacay-42bcd",
+    storageBucket: "vacay-42bcd.appspot.com"
+  };
+  firebase.initializeApp(config);
+</script>
+<script src="/static/vacay/chat.js"></script>
+
+<script>
+    var flag = false;
+    var aflag = false;
+    function show_panel(){
+        if (flag){
+            flag = false; document.getElementById("panel").style.display = "none";
+            document.getElementById("attachment-btn").src = '/static/vacay/images/attachmentbutton.png';
+            document.getElementById("audio-panel").style.display = "none";
+        }else {
+            flag = true; document.getElementById("panel").style.display = "block";
+            document.getElementById("attachment-btn").src = '/static/vacay/images/cancel.png';
+            document.body.scrollTop = 1000;
+            document.documentElement.scrollTop = 1000;
+        }
+    }
+    function open_panel(){
+        if (aflag){
+            aflag = false;
+            document.getElementById("audio-panel").style.display = "none";
+        }else {
+            aflag = true;
+            document.getElementById("audio-panel").style.display = "block";
+            document.body.scrollTop = 1000;
+            document.documentElement.scrollTop = 1000;
+        }
+    }
+    function chat_map(){
+        window.location.href = "/map_chat";
+    }
+
+    if (document.getElementById("lat").value.length > 0 && document.getElementById("lng").value.length > 0){
+
+        document.getElementById("imageFrame").style.display = "block";
+	    document.getElementById("image_message").style.display = "block";
+	    document.getElementById("videoresult").style.display = "none";
+ 	    document.getElementById("image_message").src = "/static/vacay/images/mapimage.jpg";
+ 	    document.getElementById("type").value = 'map';
+    }
+</script>
+
+<script>
+
+ window.URL = window.URL || window.webkitURL;
+ navigator.getUserMedia  = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+
+ var recorder;
+ var audio = document.querySelector('audio');
+
+ function startRecording() {
+//  window.location.href = "/recorder";
+  if (navigator.getUserMedia) {
+   navigator.getUserMedia({audio: true}, onSuccess, onFail);
+  } else {
+   console.log('navigator.getUserMedia not present');
+  }
+ }
+
+ function stopRecording() {
+  recorder.stop();
+  recorder.exportWAV(function(s) {
+    audio.src = window.URL.createObjectURL(s);
+    audio.play(); //call this to play the song right away
+    uploadAudio(audio.src);
+  });
+ }
+
+ var onFail = function(e) {
+  console.log('Rejected!', e);
+ };
+
+ var onSuccess = function(s) {
+  var context = new webkitAudioContext();
+  var mediaStreamSource = context.createMediaStreamSource(s);
+  recorder = new Recorder(mediaStreamSource);
+  recorder.record();
+
+  // audio loopback
+  // mediaStreamSource.connect(context.destination);
+ }
+
+ function uploadAudio(url){
+  fetch(url)
+  .then(res => res.blob()) // Gets the response and returns it as a blob
+  .then(blob => {
+    // Here's where you get access to the blob
+    // And you can use it for whatever you want
+    // Like calling ref().put(blob)
+
+    // Here, I use it to make an image appear on the page
+    document.getElementById("type").value = 'audio';
+    uploadFile(blob);
+  });
+ }
+
+</script>
+
+<!--<script src="/static/vacay/audio.js"></script>-->
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

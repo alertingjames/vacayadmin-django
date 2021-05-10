@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Nearby Restaurants</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+       #welcome {
+        width: auto;
+        height: auto;
+        padding:10px;
+        box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.25);
+        border-radius:20px;
+        background-color: orange;
+        color:white;
+        font-size:25px;
+        font-family:Tahoma;
+        font-weight:700;
+        -webkit-animation-name: example; /* Safari 4.0 - 8.0 */
+        -webkit-animation-duration: 4s; /* Safari 4.0 - 8.0 */
+        animation-name: example;
+        animation-duration: 4s;
+      }
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes example {
+    0% {background-color: blue; left:0px; top:0px;}
+    10% {background-color: yellow; left:0px; top:0px;}
+    20% {background-color: red; left:0px; top:0px;}
+    25% {background-color: yellow; left:100px; top:100px;}
+    50% {background-color: blue; left:100px; top:100px;}
+    60% {background-color: red; left:-100px; top:100px;}
+    70% {background-color: blue; left:-100px; top:100px;}
+    75% {background-color: orange; left:0px; top:0px;}
+    100% {background-color: blue; left:0px; top:0px;}
+}
+
+/* Standard syntax */
+@keyframes example {
+    0% {background-color: blue; left:0px; top:0px;}
+    10% {background-color: yellow; left:0px; top:0px;}
+    20% {background-color: red; left:0px; top:0px;}
+    25% {background-color: yellow; left:100px; top:100px;}
+    50% {background-color: blue; left:100px; top:100px;}
+    60% {background-color: red; left:-100px; top:100px;}
+    70% {background-color: blue; left:-100px; top:100px;}
+    75% {background-color: orange; left:0px; top:0px;}
+    100% {background-color: blue; left:0px; top:0px;}
+}
+
+.dropdown {
+    <!--position: relative;-->
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    <!--position: absolute;-->
+    background-color: #f9f9f9;
+    min-width: 600px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 22;
+}
+
+.dropdown:hover .dropdown-content {
+    display: inline-block;
+}
+
+#desc {
+    padding: 10px;
+    text-align: center;
+    font-size:20px;
+    color:red;
+    font-weight:600;
+    background:white;
+}
+
+    </style>
+  </head>
+  <body>
+  <div style="margin-top:5px; margin-left:130px;  z-index:10; position:fixed; display:none;">
+  <input id="lat" type="textbox" value="{{latitude}}" style="width:300px;">
+  <input id="lng" type="textbox" value="{{longitude}}" style="width:300px;">
+    <input id="range" type="textbox" value="{{range}}" style="width:150px;">
+    <input id="address" type="textbox" value="{{address}}" style="width:150px;">
+</div>
+     <div style="margin-top:5px; margin-left:150px;  z-index:10; position:fixed;" id="welcome">
+    Welcome! Here is {{address}}<br>There are restaurants: R({{range}}M)
+  </div>
+    <div id="map" style="width: 60%; height: 100%; float:left"></div>
+
+  <div class="dropdown">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSS_cNAueJu8ZDEAqiynun55jDj9Sb5ska4deXuZnr1LgkuHdPMqg" id="placeimage" style="border: 2px solid white; position:fixed; width:250px; height:auto; margin-top:75px; border-radius:15px; z-index:20; margin-left:10px;">
+    <div class="dropdown-content" style="border: 2px solid white; position:fixed; width:600px; height:auto; border-radius:15px; z-index:22; margin-left:20px; margin-top:20px; padding:10px;">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSS_cNAueJu8ZDEAqiynun55jDj9Sb5ska4deXuZnr1LgkuHdPMqg" id="placeimage2" alt="" style="width:600px; height:auto;">
+      <div id="desc"></div>
+    </div>
+  </div>
+
+    <div id="pano" style="width: 40%; height: 100%; float:left"></div>
+  <script>
+      // This example requires the Places library. Include the libraries=places
+      // parameter when you first load the API. For example:
+      // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+
+      var map;
+      var infowindow;
+      var latt = document.getElementById('lat').value;
+      var lngg = document.getElementById('lng').value;
+      var range = document.getElementById('range').value;
+      var address = document.getElementById('address').value;
+
+      var panorama;
+      var sv;
+
+      function initMap() {
+
+        <!--var pyrmont = {lat: 38.7856777, lng: -104.845099};-->
+
+        sv = new google.maps.StreetViewService();
+
+        panorama = new google.maps.StreetViewPanorama(document.getElementById('pano'));
+
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: new google.maps.LatLng(latt,lngg),
+          zoom: 15,
+          <!--streetViewControl: false-->
+        });
+
+        var request = {
+            location: new google.maps.LatLng(latt,lngg),
+            radius: range,
+            type : [ 'restaurant' ]
+        };
+        infowindow = new google.maps.InfoWindow();
+        var service = new google.maps.places.PlacesService(map);
+        service.nearbySearch(request, callback);
+
+        var marker2 = new google.maps.Marker({
+          map: map,
+          animation: google.maps.Animation.DROP,
+          position: new google.maps.LatLng(latt,lngg)
+        });
+
+        var infowindow2 = new google.maps.InfoWindow();
+        infowindow2.setContent("Center: "+address);
+        infowindow2.open(map, marker2);
+
+        google.maps.event.addListener(marker2, 'click', function() {
+
+          infowindow2.setContent("Center: "+address);
+          infowindow2.open(map, marker2);
+
+          sv.getPanorama({location: marker2.getPosition(), radius: 50}, processSVData);
+        });
+
+        var cityCircle = new google.maps.Circle({
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.3,
+            strokeWeight: 2,
+            fillColor: '#FF0000',
+            fillOpacity: 0.15,
+            map: map,
+            center: new google.maps.LatLng(latt,lngg),
+            radius: range*1
+        });
+
+        sv.getPanorama({location: new google.maps.LatLng(latt,lngg), radius: 50}, processSVData);
+      }
+
+      function callback(results, status) {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+          for (var i = 0; i < results.length; i++) {
+            createMarker(results[i]);
+          }
+        }else{document.getElementById('welcome').style.display = 'none'; alert("There is no any service..."); }
+      }
+
+      function createMarker(place) {
+        var placeLoc = place.geometry.location;
+        var icon = {
+              url: "/static/vacay/images/restaurant.png",
+              size: new google.maps.Size(40, 40),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(40, 40)
+            };
+        var marker = new google.maps.Marker({
+          icon:icon,
+          map: map,
+
+          animation: google.maps.Animation.DROP,
+          position: place.geometry.location
+        });
+
+        google.maps.event.addListener(marker, 'click', function() {
+
+          if (marker.getAnimation() !== null) {
+              marker.setAnimation(null);
+          } else {
+              marker.setAnimation(google.maps.Animation.BOUNCE);
+          }
+          infowindow.setContent(place.name);
+          infowindow.open(map, this);
+
+          var photos = place.photos;
+
+          document.getElementById('placeimage').src = photos[0].getUrl({'maxWidth': 250, 'maxHeight': 250});
+          document.getElementById('placeimage2').src = photos[0].getUrl({'maxWidth': 600, 'maxHeight': 600});
+          document.getElementById('desc').innerHTML = place.name;
+
+          sv.getPanorama({location: marker.getPosition(), radius: 50}, processSVData);
+        });
+      }
+
+      function processSVData(data, status) {
+        if (status === 'OK') {
+          var marker = new google.maps.Marker({
+            position: data.location.latLng,
+            map: map,
+            visible: false,
+            title: data.location.description
+          });
+
+          <!--infowindow = new google.maps.InfoWindow();-->
+          <!--infowindow.setContent(data.location.description);-->
+          <!--infowindow.open(map, marker);-->
+
+          panorama.setPano(data.location.pano);
+          panorama.setPov({
+            heading: 270,
+            pitch: 0
+          });
+          panorama.setVisible(true);
+
+          marker.addListener('click', function() {
+            var markerPanoID = data.location.pano;
+            // Set the Pano to use the passed panoID.
+            panorama.setPano(markerPanoID);
+            panorama.setPov({
+              heading: 270,
+              pitch: 0
+            });
+            panorama.setVisible(true);
+          });
+        } else {
+          console.error('Street View data not found for this location.');
+        }
+      }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDj9cVi6h9LTEYnSe4Dv_EvG-hxqLvM8Dg&libraries=places&callback=initMap" async defer></script>
+
+   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>
+    $( function() {
+        $( "#welcome" ).draggable();
+    } );
+  </script>
+  </body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>VaCay Picture</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../lib/w3.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Satisfy' rel="stylesheet" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="shortcut icon" href="/static/vacay/images/vacaylogo.jpg" type="image/jpg">
+
+    <style>
+        html, body{
+            background: url("/static/vacay/images/beautybackground.jpg") no-repeat center center fixed;
+            background-size:cover;
+        }
+        #back{
+            width:100px;
+            z-index:12;
+        }
+    </style>
+</head>
+<body>
+
+<center>
+    {% if provider %}
+    <img src="{{provider.proProfileImageUrl}}" style="width:auto; height:auto; margin-top:100px;">
+    {% elif announce %}
+    <img src="{{announce.an_image}}" style="width:auto; height:auto; margin-top:100px;">
+    {% elif service %}
+    <img src="{{service.proServicePictureUrl}}" style="width:auto; height:auto; margin-top:100px;">
+    {% elif product %}
+    <img src="{{product.itemPictureUrl}}" style="width:auto; height:auto; margin-top:100px;">
+    {% elif bproduct %}
+    <img src="{{bproduct.bm_proImageUrl}}" style="width:auto; height:auto; margin-top:100px;">
+    {% elif employee %}
+    <img src="{{employee.em_image}}" style="width:auto; height:auto; margin-top:100px;">
+    {% elif tiptrick %}
+    <img src="{{tiptrick.image}}" style="width:auto; height:auto; margin-top:100px;">
+    {% endif %}
+</center>
+</body>
+</html>
